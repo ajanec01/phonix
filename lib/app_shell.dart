@@ -41,8 +41,8 @@ class _AppShellState extends State<AppShell> {
       label: 'Play',
     ),
     NavigationDestination(
-      icon: Icon(CupertinoIcons.doc_on_doc),
-      selectedIcon: Icon(CupertinoIcons.doc_on_doc_fill),
+      icon: Icon(CupertinoIcons.square_stack_3d_up),
+      selectedIcon: Icon(CupertinoIcons.square_stack_3d_up_fill),
       label: 'Library',
     ),
     NavigationDestination(
