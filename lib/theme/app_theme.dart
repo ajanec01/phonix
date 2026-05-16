@@ -151,14 +151,14 @@ abstract final class AppTheme {
         space: 1,
       ),
 
-      scaffoldBackgroundColor: AppColors.surface,
+      scaffoldBackgroundColor: AppColors.surfaceContainerLow,
     );
   }
 
   static TextTheme _buildTextTheme(ColorScheme colorScheme) {
-    // Nunito: rounded, friendly, strong readability for children and adults.
-    // Slightly upscaled body sizes suit mobile reading.
-    final base = GoogleFonts.nunitoTextTheme();
+    // Inter: rational, screen-optimised — close in character to SF Pro without
+    // copying it. Slightly upscaled body sizes suit mobile reading.
+    final base = GoogleFonts.interTextTheme();
 
     return base.copyWith(
       // Large display — e.g. the big grapheme on a lesson card

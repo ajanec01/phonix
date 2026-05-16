@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'theme/app_colors.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -26,7 +27,6 @@ class _ThemePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tt = Theme.of(context).textTheme;
-    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Phonix')),
@@ -46,14 +46,11 @@ class _ThemePreview extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: [
-              _PhaseChip(label: 'Phase 1', color: cs.primary),
-              _PhaseChip(label: 'Phase 2', color: const Color(0xFFEA580C)),
-              _PhaseChip(label: 'Phase 3', color: const Color(0xFF10B981)),
-              _PhaseChip(label: 'Phase 4', color: const Color(0xFF3B82F6)),
-              _PhaseChip(label: 'Phase 5', color: const Color(0xFF8B5CF6)),
-              _PhaseChip(label: 'Phase 6', color: const Color(0xFFEC4899)),
-            ],
+            children: AppColors.phases
+                .asMap()
+                .entries
+                .map((e) => _PhaseChip(label: 'Phase ${e.key + 1}', color: e.value))
+                .toList(),
           ),
         ],
       ),

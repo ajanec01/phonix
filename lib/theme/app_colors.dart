@@ -1,49 +1,49 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {
-  // --- Brand ---
-  static const primary = Color(0xFFEA580C);
+  // --- Primary (adapted Apple blue — slightly deeper than #007AFF) ---
+  static const primary = Color(0xFF0071E3);
   static const onPrimary = Colors.white;
-  static const primaryContainer = Color(0xFFFFEDE3);
-  static const onPrimaryContainer = Color(0xFF4A1A00);
+  static const primaryContainer = Color(0xFFDEEEFF);
+  static const onPrimaryContainer = Color(0xFF003770);
 
-  // --- Secondary (navy — grounding, trustworthy for parent-facing content) ---
-  static const secondary = Color(0xFF0369A1);
+  // --- Secondary (near-black — for secondary actions, parent-facing content) ---
+  static const secondary = Color(0xFF1D1D1F);
   static const onSecondary = Colors.white;
-  static const secondaryContainer = Color(0xFFDCEEFA);
-  static const onSecondaryContainer = Color(0xFF002033);
+  static const secondaryContainer = Color(0xFFE5E5EA);
+  static const onSecondaryContainer = Color(0xFF1D1D1F);
 
   // --- Tertiary (green — success, completion) ---
-  static const tertiary = Color(0xFF16A34A);
+  static const tertiary = Color(0xFF34C759); // Apple system green
   static const onTertiary = Colors.white;
-  static const tertiaryContainer = Color(0xFFD1FAE5);
-  static const onTertiaryContainer = Color(0xFF003317);
+  static const tertiaryContainer = Color(0xFFD1F5DC);
+  static const onTertiaryContainer = Color(0xFF00391A);
 
-  // --- Surface ---
-  static const surface = Color(0xFFFEFAF7);
-  static const onSurface = Color(0xFF1C1917);
+  // --- Surface (Apple system background values) ---
+  static const surface = Color(0xFFFFFFFF);
+  static const onSurface = Color(0xFF1D1D1F);         // Apple primary label
   static const surfaceContainerLowest = Color(0xFFFFFFFF);
-  static const surfaceContainerLow = Color(0xFFF8F3EE);
-  static const surfaceContainer = Color(0xFFF2ECE5);
-  static const surfaceContainerHigh = Color(0xFFEBE5DC);
-  static const surfaceContainerHighest = Color(0xFFE4DDD3);
-  static const onSurfaceVariant = Color(0xFF7C7269);
-  static const outline = Color(0xFFB0A89F);
-  static const outlineVariant = Color(0xFFDDD5CC);
+  static const surfaceContainerLow = Color(0xFFF2F2F7); // Apple grouped background
+  static const surfaceContainer = Color(0xFFE5E5EA);
+  static const surfaceContainerHigh = Color(0xFFD1D1D6);
+  static const surfaceContainerHighest = Color(0xFFC7C7CC);
+  static const onSurfaceVariant = Color(0xFF6E6E73);  // Apple secondary label
+  static const outline = Color(0xFFC7C7CC);           // Apple separator
+  static const outlineVariant = Color(0xFFE5E5EA);
 
   // --- Error ---
-  static const error = Color(0xFFDC2626);
+  static const error = Color(0xFFFF3B30); // Apple system red
   static const onError = Colors.white;
-  static const errorContainer = Color(0xFFFEE2E2);
+  static const errorContainer = Color(0xFFFFE5E3);
   static const onErrorContainer = Color(0xFF4A0000);
 
-  // --- Phase accent colours (used in lesson cards, progress, games) ---
-  static const phase1 = Color(0xFFF59E0B); // amber
-  static const phase2 = Color(0xFFEA580C); // orange  (matches primary)
-  static const phase3 = Color(0xFF10B981); // emerald
-  static const phase4 = Color(0xFF3B82F6); // blue
-  static const phase5 = Color(0xFF8B5CF6); // violet
-  static const phase6 = Color(0xFFEC4899); // pink
+  // --- Phase accent colours ---
+  static const phase1 = Color(0xFFFF9500); // Apple system orange — listening/awareness
+  static const phase2 = Color(0xFFFF6B00); // deeper orange — first letters
+  static const phase3 = Color(0xFF34C759); // Apple system green — new graphemes
+  static const phase4 = Color(0xFF5856D6); // Apple system indigo — consolidation
+  static const phase5 = Color(0xFFAF52DE); // Apple system purple — alternatives
+  static const phase6 = Color(0xFFFF2D55); // Apple system pink — fluency
 
   static const List<Color> phases = [
     phase1,
