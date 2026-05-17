@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
-import 'data/curriculum.dart';
+import '../../../theme/app_colors.dart';
+import '../data/curriculum.dart';
 import 'phase1_screen.dart';
 
 class LearnScreen extends StatelessWidget {
