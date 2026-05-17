@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
 import '../../data/curriculum.dart';
 import '../widgets/aspect_card.dart';
+import '../widgets/bullet_list.dart';
 
 class Phase1Screen extends StatefulWidget {
   const Phase1Screen({super.key});
@@ -127,7 +128,7 @@ class _BriefingCard extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 16),
-                    _BulletList(items: const [
+                    BulletList(items: const [
                       'Tune in to sounds in the environment',
                       'Develop a sense of rhythm and rhyme',
                       'Hear individual sounds in words',
@@ -145,37 +146,6 @@ class _BriefingCard extends StatelessWidget {
   }
 }
 
-class _BulletList extends StatelessWidget {
-  const _BulletList({required this.items});
-  final List<String> items;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: items
-          .map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('· ',
-                      style: TextStyle(
-                          color: AppColors.onSurfaceVariant,
-                          fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: Text(item,
-                        style: Theme.of(context).textTheme.bodyMedium),
-                  ),
-                ],
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
 
 class _TipsSection extends StatefulWidget {
   const _TipsSection({required this.color});
@@ -218,7 +188,7 @@ class _TipsSectionState extends State<_TipsSection> {
         ),
         if (_expanded) ...[
           const SizedBox(height: 10),
-          _BulletList(items: const [
+          BulletList(items: const [
             'Narrate sounds on a walk — "I can hear a bird, can you?"',
             'Sing nursery rhymes together every day',
             'Play "I spy" using sounds, not letters: "/s/ for something I can see…"',
