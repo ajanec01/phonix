@@ -15,21 +15,15 @@ class CurriculumRepository {
 
   Future<List<Phase>> getPhases() async {
     try {
-      final data = await _remote.fetchPhases();
-      return data.map(Phase.fromJson).toList();
-    } catch (_) {
-      final data = await _local.fetchPhases();
-      return data.map(Phase.fromJson).toList();
-    }
+      return (await _remote.fetchPhases()).map(Phase.fromJson).toList();
+    } catch (_) {}
+    return (await _local.fetchPhases()).map(Phase.fromJson).toList();
   }
 
   Future<List<Aspect>> getAspects(int phaseNumber) async {
     try {
-      final data = await _remote.fetchAspects(phaseNumber);
-      return data.map(Aspect.fromJson).toList();
-    } catch (_) {
-      final data = await _local.fetchAspects(phaseNumber);
-      return data.map(Aspect.fromJson).toList();
-    }
+      return (await _remote.fetchAspects(phaseNumber)).map(Aspect.fromJson).toList();
+    } catch (_) {}
+    return (await _local.fetchAspects(phaseNumber)).map(Aspect.fromJson).toList();
   }
 }
