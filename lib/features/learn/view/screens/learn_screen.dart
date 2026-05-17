@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
 import '../../data/repository/curriculum_repository.dart';
+import '../../data/repository/progress_repository.dart';
 import '../../data/service/local_curriculum_service.dart';
+import '../../data/service/local_progress_service.dart';
 import '../../data/service/remote_curriculum_service.dart';
 import '../../viewmodel/learn_state.dart';
 import '../../viewmodel/learn_viewmodel.dart';
@@ -23,9 +25,12 @@ class _LearnScreenState extends State<LearnScreen> {
   void initState() {
     super.initState();
     _viewModel = LearnViewModel(
-      repository: CurriculumRepository(
+      curriculumRepository: CurriculumRepository(
         remote: RemoteCurriculumService(),
         local: LocalCurriculumService(),
+      ),
+      progressRepository: ProgressRepository(
+        local: LocalProgressService(),
       ),
     );
     _viewModel.load();
@@ -47,7 +52,8 @@ class _LearnScreenState extends State<LearnScreen> {
         builder: (context, snapshot) {
           return switch (snapshot.data!) {
             LearnStateLoading() => const LearnSkeleton(),
-            LearnStateLoaded(:final phases) => LearnContent(phases: phases),
+            LearnStateLoaded(:final phases, :final currentPhase) =>
+              LearnContent(phases: phases, currentPhase: currentPhase),
             LearnStateError(:final message) => LearnError(message: message),
           };
         },

@@ -6,8 +6,13 @@ import 'phase_card.dart';
 import 'stats_row.dart';
 
 class LearnContent extends StatelessWidget {
-  const LearnContent({super.key, required this.phases});
+  const LearnContent({
+    super.key,
+    required this.phases,
+    required this.currentPhase,
+  });
   final List<Phase> phases;
+  final Phase currentPhase;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,7 @@ class LearnContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ContinueCard(phase: phases.first),
+                ContinueCard(phase: currentPhase),
                 const SizedBox(height: 24),
                 const StatsRow(),
                 const SizedBox(height: 32),
