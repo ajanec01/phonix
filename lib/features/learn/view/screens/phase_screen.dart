@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
 import '../../data/curriculum.dart';
+import '../../domain/model/phase.dart';
 import '../widgets/aspect_card.dart';
 import '../widgets/bullet_list.dart';
 
 class PhaseScreen extends StatefulWidget {
   const PhaseScreen({super.key, required this.phase});
-  final PhaseInfo phase;
+  final Phase phase;
 
   @override
   State<PhaseScreen> createState() => _PhaseScreenState();
@@ -71,13 +72,13 @@ class _BriefingCard extends StatelessWidget {
     required this.expanded,
     required this.onToggle,
   });
-  final PhaseInfo phase;
+  final Phase phase;
   final bool expanded;
   final VoidCallback onToggle;
 
   @override
   Widget build(BuildContext context) {
-    final color = phase.color;
+    final color = AppColors.phases[phase.id - 1];
 
     return AnimatedSize(
       duration: const Duration(milliseconds: 250),

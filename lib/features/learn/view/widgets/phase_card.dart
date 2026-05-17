@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
-import '../../data/curriculum.dart';
+import '../../domain/model/phase.dart';
 import '../screens/phase_screen.dart';
 
 class PhaseCard extends StatelessWidget {
   const PhaseCard({super.key, required this.phase});
-  final PhaseInfo phase;
+  final Phase phase;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class PhaseCard extends StatelessWidget {
         child: IntrinsicHeight(
           child: Row(
             children: [
-              Container(width: 4, color: phase.color),
+              Container(width: 4, color: AppColors.phases[phase.id - 1]),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
@@ -62,7 +62,7 @@ class PhaseCard extends StatelessWidget {
   }
 }
 
-void _navigateToPhase(BuildContext context, PhaseInfo phase) {
+void _navigateToPhase(BuildContext context, Phase phase) {
   Navigator.of(context).push(
     CupertinoPageRoute(builder: (_) => PhaseScreen(phase: phase)),
   );

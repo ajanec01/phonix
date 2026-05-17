@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
-import '../../data/curriculum.dart';
+import '../../domain/model/phase.dart';
 import '../screens/phase_screen.dart';
 
 class ContinueCard extends StatelessWidget {
   const ContinueCard({super.key, required this.phase});
-  final PhaseInfo phase;
+  final Phase phase;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _navigateToPhase(context, phase),
+      onTap: () => Navigator.of(context).push(
+        CupertinoPageRoute(builder: (_) => PhaseScreen(phase: phase)),
+      ),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -39,7 +41,7 @@ class ContinueCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Sound Awareness',
+                    phase.description,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.white.withValues(alpha: 0.6),
                         ),
@@ -65,10 +67,4 @@ class ContinueCard extends StatelessWidget {
       ),
     );
   }
-}
-
-void _navigateToPhase(BuildContext context, PhaseInfo phase) {
-  Navigator.of(context).push(
-    CupertinoPageRoute(builder: (_) => PhaseScreen(phase: phase)),
-  );
 }
