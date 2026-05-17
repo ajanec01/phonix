@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../theme/app_colors.dart';
+import '../widgets/shimmer_box.dart';
 import '../../data/repository/curriculum_repository.dart';
 import '../../data/service/local_curriculum_service.dart';
 import '../../data/service/remote_curriculum_service.dart';
@@ -112,13 +113,7 @@ class _AspectsLoading extends StatelessWidget {
                 4,
                 (i) => Padding(
                   padding: EdgeInsets.only(top: i > 0 ? 10.0 : 0),
-                  child: Container(
-                    height: 74,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
+                  child: ShimmerBox(height: 74, radius: 14),
                 ),
               ),
             ),
