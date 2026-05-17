@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../data/curriculum.dart';
+import 'continue_card.dart';
+import 'stats_row.dart';
 import 'phase1_screen.dart';
 
 class LearnScreen extends StatelessWidget {
@@ -24,9 +26,9 @@ class LearnScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _ContinueCard(phase: phases.first),
+                  ContinueCard(phase: phases.first),
                   const SizedBox(height: 24),
-                  _StatsRow(),
+                  const StatsRow(),
                   const SizedBox(height: 32),
                   Text(
                     'Phases',
@@ -46,117 +48,6 @@ class LearnScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ContinueCard extends StatelessWidget {
-  const _ContinueCard({required this.phase});
-  final PhaseInfo phase;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _navigateToPhase(context, phase),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppColors.secondary,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Continue',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.6),
-                        ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    phase.title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Sound Awareness',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.6),
-                        ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                CupertinoIcons.arrow_right,
-                color: Colors.white,
-                size: 16,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StatsRow extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _StatChip(value: '0', label: 'Sounds'),
-        const SizedBox(width: 10),
-        _StatChip(value: '—', label: 'Accuracy'),
-        const SizedBox(width: 10),
-        _StatChip(value: '0', label: 'Stars'),
-      ],
-    );
-  }
-}
-
-class _StatChip extends StatelessWidget {
-  const _StatChip({required this.value, required this.label});
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.outlineVariant),
-        ),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-          ],
-        ),
       ),
     );
   }
