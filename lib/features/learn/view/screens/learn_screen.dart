@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
-import '../data/curriculum.dart';
-import 'continue_card.dart';
-import 'phase_card.dart';
-import 'stats_row.dart';
+import '../../../../theme/app_colors.dart';
+import '../../data/curriculum.dart';
+import '../widgets/continue_card.dart';
+import '../widgets/phase_card.dart';
+import '../widgets/stats_row.dart';
 
 class LearnScreen extends StatelessWidget {
   const LearnScreen({super.key});

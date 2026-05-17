@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
-import '../data/curriculum.dart';
-import 'phase1_screen.dart';
+import '../../../../theme/app_colors.dart';
+import '../../data/curriculum.dart';
+import '../screens/phase1_screen.dart';
 
 class PhaseCard extends StatelessWidget {
   const PhaseCard({super.key, required this.phase});

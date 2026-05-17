@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'features/learn/view/learn_screen.dart';
+import 'features/learn/view/screens/learn_screen.dart';
 import 'features/library/library_screen.dart';
 import 'features/play/play_screen.dart';
 import 'features/practice/practice_screen.dart';
