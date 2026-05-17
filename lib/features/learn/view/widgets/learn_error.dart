@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
+import 'learn_scroll_view.dart';
 
 class LearnError extends StatelessWidget {
   const LearnError({super.key, required this.message});
@@ -7,13 +8,8 @@ class LearnError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+    return LearnScrollView(
       slivers: [
-        SliverAppBar.large(
-          backgroundColor: AppColors.surfaceContainerLow,
-          surfaceTintColor: Colors.transparent,
-          title: const Text('Learn'),
-        ),
         SliverFillRemaining(
           child: Center(
             child: Padding(

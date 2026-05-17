@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../theme/app_colors.dart';
+import 'learn_scroll_view.dart';
 import 'shimmer_box.dart';
 
 class LearnSkeleton extends StatelessWidget {
@@ -11,13 +12,8 @@ class LearnSkeleton extends StatelessWidget {
     return Shimmer.fromColors(
       baseColor: AppColors.surfaceContainerHigh,
       highlightColor: AppColors.surfaceContainerLow,
-      child: CustomScrollView(
+      child: LearnScrollView(
         slivers: [
-          SliverAppBar.large(
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            title: const Text('Learn'),
-          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),

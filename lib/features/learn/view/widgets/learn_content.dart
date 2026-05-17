@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../theme/app_colors.dart';
 import '../../domain/model/phase.dart';
-import '../widgets/continue_card.dart';
-import '../widgets/phase_card.dart';
-import '../widgets/stats_row.dart';
+import 'continue_card.dart';
+import 'learn_scroll_view.dart';
+import 'phase_card.dart';
+import 'stats_row.dart';
 
 class LearnContent extends StatelessWidget {
   const LearnContent({super.key, required this.phases});
@@ -11,13 +11,8 @@ class LearnContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+    return LearnScrollView(
       slivers: [
-        SliverAppBar.large(
-          backgroundColor: AppColors.surfaceContainerLow,
-          surfaceTintColor: Colors.transparent,
-          title: const Text('Learn'),
-        ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
