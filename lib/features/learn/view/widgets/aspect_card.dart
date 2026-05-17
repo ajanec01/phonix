@@ -1,18 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
-import '../../data/curriculum.dart';
+import '../../domain/model/aspect.dart';
 import '../screens/aspect_screen.dart';
+import 'aspect_icons.dart';
 
 class AspectCard extends StatelessWidget {
-  const AspectCard({super.key, required this.aspect});
-  final Phase1Aspect aspect;
+  const AspectCard({super.key, required this.aspect, required this.color});
+  final Aspect aspect;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
-        CupertinoPageRoute(builder: (_) => AspectScreen(aspect: aspect)),
+        CupertinoPageRoute(
+            builder: (_) => AspectScreen(aspect: aspect, color: color)),
       ),
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -27,10 +30,10 @@ class AspectCard extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.phase1.withValues(alpha: 0.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(aspect.icon, size: 20, color: AppColors.phase1),
+              child: Icon(aspectIcon(aspect.iconKey), size: 20, color: color),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -46,7 +49,7 @@ class AspectCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _ActivityTag(label: aspect.activityLabel),
+                      _ActivityTag(label: aspect.activityLabel, color: color),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -68,21 +71,22 @@ class AspectCard extends StatelessWidget {
 }
 
 class _ActivityTag extends StatelessWidget {
-  const _ActivityTag({required this.label});
+  const _ActivityTag({required this.label, required this.color});
   final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.phase1.withValues(alpha: 0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppColors.phase1,
+              color: color,
               fontWeight: FontWeight.w700,
             ),
       ),

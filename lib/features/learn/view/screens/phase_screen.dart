@@ -1,8 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../theme/app_colors.dart';
-import '../../data/curriculum.dart';
+import '../../data/repository/curriculum_repository.dart';
+import '../../data/service/local_curriculum_service.dart';
+import '../../data/service/remote_curriculum_service.dart';
+import '../../domain/model/aspect.dart';
 import '../../domain/model/phase.dart';
+import '../../viewmodel/aspect_state.dart';
+import '../../viewmodel/aspect_viewmodel.dart';
 import '../widgets/aspect_card.dart';
 import '../widgets/bullet_list.dart';
 
@@ -16,11 +22,32 @@ class PhaseScreen extends StatefulWidget {
 
 class _PhaseScreenState extends State<PhaseScreen> {
   bool _briefingExpanded = true;
+  late final AspectViewModel _aspectViewModel;
+
+  Color get _phaseColor => AppColors.phases[widget.phase.id - 1];
+
+  @override
+  void initState() {
+    super.initState();
+    _aspectViewModel = AspectViewModel(
+      repository: CurriculumRepository(
+        remote: RemoteCurriculumService(),
+        local: LocalCurriculumService(),
+      ),
+      phaseNumber: widget.phase.id,
+    );
+    _aspectViewModel.load();
+  }
+
+  @override
+  void dispose() {
+    _aspectViewModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final phase = widget.phase;
-    final aspects = phase.id == 1 ? phase1Aspects : <Phase1Aspect>[];
 
     return Scaffold(
       backgroundColor: AppColors.surfaceContainerLow,
@@ -43,23 +70,83 @@ class _PhaseScreenState extends State<PhaseScreen> {
             ),
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
-              child: Text(
-                'Activities',
-                style: Theme.of(context).textTheme.titleMedium,
+            child: StreamBuilder<AspectState>(
+              stream: _aspectViewModel.stream,
+              initialData: _aspectViewModel.state,
+              builder: (context, snapshot) {
+                final color = _phaseColor;
+                return switch (snapshot.data!) {
+                  AspectStateLoading() => _AspectsLoading(),
+                  AspectStateLoaded(:final aspects) when aspects.isEmpty =>
+                    const SizedBox.shrink(),
+                  AspectStateLoaded(:final aspects) =>
+                    _AspectsList(aspects: aspects, color: color),
+                  AspectStateError() => const SizedBox.shrink(),
+                };
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AspectsLoading extends StatelessWidget {
+  const _AspectsLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Activities', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 12),
+          Shimmer.fromColors(
+            baseColor: AppColors.surfaceContainerHigh,
+            highlightColor: AppColors.surfaceContainerLow,
+            child: Column(
+              children: List.generate(
+                4,
+                (i) => Padding(
+                  padding: EdgeInsets.only(top: i > 0 ? 10.0 : 0),
+                  child: Container(
+                    height: 74,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
-            sliver: SliverList.separated(
-              itemCount: aspects.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 10),
-              itemBuilder: (context, index) =>
-                  AspectCard(aspect: aspects[index]),
-            ),
-          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AspectsList extends StatelessWidget {
+  const _AspectsList({required this.aspects, required this.color});
+  final List<Aspect> aspects;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Activities', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 12),
+          for (int i = 0; i < aspects.length; i++) ...[
+            if (i > 0) const SizedBox(height: 10),
+            AspectCard(aspect: aspects[i], color: color),
+          ],
         ],
       ),
     );
