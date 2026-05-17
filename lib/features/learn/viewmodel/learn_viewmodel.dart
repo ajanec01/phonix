@@ -19,10 +19,10 @@ class LearnViewModel extends ViewModel<LearnState> {
     try {
       final phases = await _curriculumRepository.getPhases();
       final progress = await _progressRepository.getProgress();
-      final currentPhase = phases.firstWhere(
-        (p) => p.id == progress.currentPhaseId,
-        orElse: () => phases.first,
-      );
+      final id = progress.currentPhaseId;
+      final currentPhase = id != null
+          ? phases.firstWhere((p) => p.id == id, orElse: () => phases.first)
+          : null;
       emit(LearnStateLoaded(phases: phases, currentPhase: currentPhase));
     } catch (e) {
       emit(LearnStateError(message: 'Could not load content. Please try again.'));

@@ -7,12 +7,17 @@ class LocalProgressService {
   Future<UserProgress> fetchProgress() async {
     final prefs = await SharedPreferences.getInstance();
     return UserProgress(
-      currentPhaseId: prefs.getInt(_currentPhaseIdKey) ?? 1,
+      currentPhaseId: prefs.getInt(_currentPhaseIdKey),
     );
   }
 
   Future<void> saveProgress(UserProgress progress) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_currentPhaseIdKey, progress.currentPhaseId);
+    final id = progress.currentPhaseId;
+    if (id != null) {
+      await prefs.setInt(_currentPhaseIdKey, id);
+    } else {
+      await prefs.remove(_currentPhaseIdKey);
+    }
   }
 }

@@ -12,7 +12,7 @@ class LearnContent extends StatelessWidget {
     required this.currentPhase,
   });
   final List<Phase> phases;
-  final Phase currentPhase;
+  final Phase? currentPhase;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,10 @@ class LearnContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ContinueCard(phase: currentPhase),
-                const SizedBox(height: 24),
+                if (currentPhase case final phase?) ...[
+                  ContinueCard(phase: phase),
+                  const SizedBox(height: 24),
+                ],
                 const StatsRow(),
                 const SizedBox(height: 32),
                 Text(
