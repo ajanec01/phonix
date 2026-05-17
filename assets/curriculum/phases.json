@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Phase 1",
+    "description": "Listening, rhythm and blending spoken sounds. No letters yet — all oral."
+  },
+  {
+    "id": 2,
+    "title": "Phase 2",
+    "description": "First 19 letter sounds and reading short words like sat, tap and pin."
+  },
+  {
+    "id": 3,
+    "title": "Phase 3",
+    "description": "Digraphs and vowel combinations — ch, sh, ai, ee, oo and more."
+  },
+  {
+    "id": 4,
+    "title": "Phase 4",
+    "description": "Reading and spelling longer words with consonant clusters."
+  },
+  {
+    "id": 5,
+    "title": "Phase 5",
+    "description": "Alternative spellings and pronunciations — the same sound, many ways to write it."
+  },
+  {
+    "id": 6,
+    "title": "Phase 6",
+    "description": "Reading fluency, spelling rules, suffixes and longer texts."
+  }
+]
