@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
 import '../../data/curriculum.dart';
-import '../screens/phase1_screen.dart';
+import '../screens/phase_screen.dart';
 
 class PhaseCard extends StatelessWidget {
   const PhaseCard({super.key, required this.phase});
@@ -10,10 +10,8 @@ class PhaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isImplemented = phase.id == 1;
-
     return GestureDetector(
-      onTap: isImplemented ? () => _navigateToPhase(context, phase) : null,
+      onTap: () => _navigateToPhase(context, phase),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.surfaceContainerLowest,
@@ -47,12 +45,10 @@ class PhaseCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Icon(
+                      const Icon(
                         CupertinoIcons.chevron_right,
                         size: 16,
-                        color: isImplemented
-                            ? AppColors.onSurfaceVariant
-                            : AppColors.outlineVariant,
+                        color: AppColors.onSurfaceVariant,
                       ),
                     ],
                   ),
@@ -67,9 +63,7 @@ class PhaseCard extends StatelessWidget {
 }
 
 void _navigateToPhase(BuildContext context, PhaseInfo phase) {
-  if (phase.id == 1) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(builder: (_) => const Phase1Screen()),
-    );
-  }
+  Navigator.of(context).push(
+    CupertinoPageRoute(builder: (_) => PhaseScreen(phase: phase)),
+  );
 }

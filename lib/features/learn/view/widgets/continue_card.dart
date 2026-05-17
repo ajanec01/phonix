@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
 import '../../data/curriculum.dart';
-import '../screens/phase1_screen.dart';
+import '../screens/phase_screen.dart';
 
 class ContinueCard extends StatelessWidget {
   const ContinueCard({super.key, required this.phase});
@@ -68,9 +68,7 @@ class ContinueCard extends StatelessWidget {
 }
 
 void _navigateToPhase(BuildContext context, PhaseInfo phase) {
-  if (phase.id == 1) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(builder: (_) => const Phase1Screen()),
-    );
-  }
+  Navigator.of(context).push(
+    CupertinoPageRoute(builder: (_) => PhaseScreen(phase: phase)),
+  );
 }
