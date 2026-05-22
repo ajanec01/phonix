@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phonix — Information Architecture</title>
+<style>
+  body { max-width: 860px; margin: 48px auto; padding: 0 24px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.7; color: #1a1a1a; }
+  h1 { font-size: 2em; border-bottom: 2px solid #e1e4e8; padding-bottom: 12px; margin-top: 0; }
+  h2 { font-size: 1.5em; border-bottom: 1px solid #e1e4e8; padding-bottom: 6px; margin-top: 48px; }
+  h3 { font-size: 1.2em; margin-top: 32px; color: #2c3e50; }
+  h4 { font-size: 1em; font-weight: 600; margin-top: 24px; color: #555; }
+  code { background: #f6f8fa; border-radius: 4px; padding: 2px 6px; font-size: 0.9em; font-family: "SFMono-Regular", Consolas, monospace; }
+  pre { background: #f6f8fa; border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 0.88em; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th { background: #f6f8fa; font-weight: 600; }
+  th, td { border: 1px solid #d1d5da; padding: 8px 12px; text-align: left; vertical-align: top; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  blockquote { border-left: 4px solid #d1d5da; margin: 16px 0; padding: 8px 16px; color: #555; background: #fafbfc; }
+  a { color: #0366d6; }
+  hr { border: none; border-top: 2px solid #e1e4e8; margin: 40px 0; }
+  li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<h1>Phonics App — Information Architecture &amp; Feature Specification</h1>
+<blockquote>
+<p>Based on the UK Letters and Sounds framework (DfES 2007), designed for children aged 4–7 and their parents, with a particular focus on parents for whom English is a second language.</p>
+</blockquote>
+<hr />
+<h2>1. Goals &amp; Design Principles</h2>
+<h3>Primary goals</h3>
+<ol>
+<li>Guide children through all 6 phases of the Letters and Sounds programme at their own pace.</li>
+<li>Equip non-native English speaking parents to actively support their child's reading journey — even if they are uncertain about English pronunciation themselves.</li>
+<li>Make structured phonics approachable: parents should understand the method, not just watch their child use an app.</li>
+</ol>
+<h3>Design principles</h3>
+<ul>
+<li><strong>Two audiences, one screen.</strong> Parent guidance lives in the same view as the child's content — always accessible, never requiring a mode switch or a separate app section.</li>
+<li><strong>Audio first.</strong> Correct pronunciation is the single most important thing a non-native parent needs. Every phoneme, word and example has high-quality audio the parent can listen to independently before teaching.</li>
+<li><strong>Progress over perfection.</strong> Children move through phases when ready, but the app never blocks progress — parents decide when to advance.</li>
+<li><strong>Accessible language.</strong> All parent-facing copy is written in plain English. Technical terms (phoneme, grapheme, digraph) are always explained in context the first time they appear.</li>
+</ul>
+<hr />
+<h2>2. User Types</h2>
+<table>
+<thead>
+<tr>
+<th>User</th>
+<th>Primary need</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Child (4–7)</strong></td>
+<td>Fun, guided learning with sounds, words and games — large touch targets, animations, audio</td>
+</tr>
+<tr>
+<td><strong>Parent (any level)</strong></td>
+<td>Understand the method, model correct sounds, track progress — guidance always at hand without switching modes</td>
+</tr>
+</tbody>
+</table>
+<p>There is no mode toggle. Parent guidance is embedded directly into the app's screens via two persistent UI patterns:</p>
+<p><strong>Briefing card</strong> — appears near the top of every phase and lesson view. Open by default on first visit so new users immediately understand what the screen covers. Collapses to a single tappable row on return visits so experienced users reach their lessons without scrolling past content they've already read. Contains: plain-language overview, audio for all sounds in the phase, and a link to full home practice tips.</p>
+<p><strong>Floating guide button (📖)</strong> — used during active lesson flow, where a briefing card would compete with the child's learning content. A small button in the corner opens a bottom sheet without navigating away from the lesson. Contains: what this step is teaching, pronunciation notes, and an exact script the parent can say aloud.</p>
+<p>In practice, the expected session pattern is: parent opens a phase → reads the briefing card → listens to the sounds → both sit down together → parent uses the floating guide during the lesson for support if needed.</p>
+<hr />
+<h2>3. Information Architecture</h2>
+<pre><code>App
+├── Onboarding (first launch only)
+│   ├── Create child profile (name, year group / age)
+│   ├── Parent English level (native / confident / learning)
+│   └── &quot;How this app works&quot; — 3-screen walkthrough
+│
+├── Home (bottom navigation)
+│   ├── Learn        — structured curriculum
+│   ├── Practice     — adaptive drills
+│   ├── Play         — standalone games
+│   ├── Library      — word bank, sound chart, parent guides
+│   └── Progress     — child &amp; parent dashboards
+│
+└── Settings
+    ├── Year group
+    ├── Child name (optional — used for personalised messages only)
+    ├── Parent language preferences
+    ├── Audio speed (normal / slow)
+    └── Notifications
+</code></pre>
+<hr />
+<h2>4. Screen-by-Screen Breakdown</h2>
+<h3>4.1 Onboarding</h3>
+<p><strong>Screen 1 — Year group</strong>
+- Single question: what year is your child in? (Reception / Year 1 / Year 2 / Not sure)
+- Used to suggest a starting phase (Reception → Phase 1–2, Year 1 → Phase 3–4, Year 2 → Phase 5–6); the suggestion is shown as a highlight, not a lock — all phases remain accessible
+- No name or personal details collected at this stage — a name can be added optionally later in Settings if the parent wants personalised encouragement messages</p>
+<p><strong>Screen 2 — Parent English level</strong>
+- "I'm a native English speaker"
+- "I speak English confidently but it's not my first language"
+- "I'm still learning English myself"
+- This affects how much pronunciation scaffolding the app surfaces by default. Can be changed in Settings.</p>
+<p><strong>Screen 3 — How to use this app</strong>
+- Brief explanation: what phonics is, why it matters, what "phases" mean
+- Key vocabulary introduced with audio: <em>phoneme</em> (a single sound), <em>grapheme</em> (the letter or letters that represent it), <em>blend</em> (joining sounds to make a word), <em>segment</em> (breaking a word into its sounds), <em>tricky word</em> (a word that doesn't follow the usual rules)
+- Reassurance: "You don't need to know English phonics already. The app will teach you alongside your child."</p>
+<hr />
+<h3>4.2 Learn</h3>
+<p>The main curriculum view. Structured around the 6 phases of Letters and Sounds.</p>
+<p><strong>Learn home screen</strong>
+- Continue card — shows current phase and lesson, one tap to resume
+- Quick stats — sounds learned, accuracy, stars earned
+- Phase list — all 6 phases, each showing completion percentage; all phases accessible from day one</p>
+<p><strong>Phase view</strong>
+- <strong>Briefing card</strong> (top of screen, open on first visit / collapsed on return):
+  - Plain-language summary: what the phase covers and what the child will be able to do by the end
+  - Audio button: hear all sounds introduced in this phase
+  - Expandable "Tips for home" section — activities requiring no materials
+  - Once collapsed, the card shows only a single "About this phase ∨" row
+- List of lessons below the card
+- Each lesson row shows: title, short description, number of sounds, completion status</p>
+<hr />
+<h3>4.3 Curriculum Phases</h3>
+<h4>Phase 1 — Sound Awareness (pre-reading)</h4>
+<p><em>Mainly oral. No graphemes. Focuses on listening, rhythm and blending spoken sounds.</em></p>
+<p>The 7 aspects become 7 interactive activities, not lessons. These are done with a parent present.</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Activity type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — Environmental sounds</td>
+<td>Sound recognition game: hear a sound, choose the picture</td>
+</tr>
+<tr>
+<td>2 — Instrumental sounds</td>
+<td>Instrument identification with audio</td>
+</tr>
+<tr>
+<td>3 — Body percussion</td>
+<td>Rhythm-copying game (tap the pattern)</td>
+</tr>
+<tr>
+<td>4 — Rhythm &amp; rhyme</td>
+<td>Rhyming word pairs — match or complete</td>
+</tr>
+<tr>
+<td>5 — Alliteration</td>
+<td>Find the odd one out (different starting sound)</td>
+</tr>
+<tr>
+<td>6 — Voice sounds</td>
+<td>Copy mouth sounds (whisper, shout, hum)</td>
+</tr>
+<tr>
+<td>7 — Oral blending &amp; segmenting</td>
+<td>Hear segmented sounds → blend to find the word; hear a word → count phonemes</td>
+</tr>
+</tbody>
+</table>
+<p>Parent companion for Phase 1 explains:
+- Why listening skills come before letters
+- What "oral blending" means and how to practise it in everyday life
+- Examples: "What does /d/-/ɒ/-/g/ say? Yes, dog!"</p>
+<h4>Phase 2 — First Letters (19 graphemes)</h4>
+<p><em>The starting point for letter sounds and reading first short words.</em></p>
+<p>Letters are introduced in sets. Within each set, children immediately read and spell decodable words.</p>
+<table>
+<thead>
+<tr>
+<th>Set</th>
+<th>Letters</th>
+<th>Decodable words introduced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>s, a, t, p</td>
+<td>sat, tap, pat, sap</td>
+</tr>
+<tr>
+<td>2</td>
+<td>i, n, m, d</td>
+<td>in, it, nip, dim, mad, dip</td>
+</tr>
+<tr>
+<td>3</td>
+<td>g, o, c, k</td>
+<td>got, cog, dock, mock</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ck, e, u, r</td>
+<td>neck, duck, run, red</td>
+</tr>
+<tr>
+<td>5</td>
+<td>h, b, f/ff, l/ll, ss</td>
+<td>him, but, fill, miss</td>
+</tr>
+</tbody>
+</table>
+<p>Tricky words for Phase 2: <em>the, to, go, no</em></p>
+<h4>Phase 3 — 25 New Graphemes</h4>
+<p><em>Introduces digraphs (2-letter graphemes) and extends to almost all English sounds.</em></p>
+<p>Sets 6–12 add: j, v, w, x, y, z/zz, qu, then digraphs ch, sh, th, ng, followed by vowel digraphs ai, ee, igh, oa, oo, ar, or, ur, ow, oi, ear, air, ure, er.</p>
+<p>Children also learn:
+- Letter names (alphabet)
+- Reading two-syllable words
+- Extended tricky word list: <em>he, she, we, me, be, was, my, you, they, her, all, are</em></p>
+<h4>Phase 4 — Consolidation &amp; Longer Words</h4>
+<p><em>No new graphemes — focuses on reading and spelling longer words with consonant clusters.</em></p>
+<p>Focus on blending and segmenting words with adjacent consonants:
+- CCVC: <em>frog, drip, swap, clap</em>
+- CVCC: <em>belt, fast, damp, help</em>
+- CCVCC: <em>stomp, blend, crisp</em>
+- Polysyllabic words: <em>rocket, picnic, trumpet</em></p>
+<p>Extended tricky word list: <em>said, so, do, some, come, were, there, little, one, when, out, what</em></p>
+<h4>Phase 5 — Alternative Spellings &amp; Pronunciations</h4>
+<p><em>Major expansion — the same sound can be spelled different ways, and the same spelling can make different sounds.</em></p>
+<p>Children learn:
+- Alternative graphemes for the same phoneme (e.g. /eɪ/ can be spelled <em>ai</em>, <em>ay</em>, <em>a-e</em>, <em>a</em>, <em>ey</em>)
+- Alternative pronunciations of graphemes (e.g. <em>ea</em> = /iː/ in <em>sea</em> but /ɛ/ in <em>head</em>)
+- Split digraphs (magic 'e'): <em>cake</em>, <em>vine</em>, <em>hope</em>, <em>cute</em></p>
+<p>Extended tricky words list for Year 1 (45 words total).</p>
+<p><strong>This phase is particularly important for non-native parents</strong> — the irregularities of English spelling make more sense when explained through the lens of alternative graphemes.</p>
+<h4>Phase 6 — Fluency &amp; Spelling</h4>
+<p><em>Reading becomes automatic; focus shifts to spelling rules, suffixes and reading longer texts.</em></p>
+<p>Focus shifts to:
+- Reading with increasing fluency and speed
+- Spelling rules: adding suffixes (-s, -es, -ing, -ed, -er, -est), doubling consonants, dropping silent 'e'
+- Past tense
+- Homophones
+- 300 high-frequency words to read automatically</p>
+<hr />
+<h3>4.4 Lesson Flow</h3>
+<p>Every lesson within Phases 2–5 follows this screen sequence for each phoneme or grapheme:</p>
+<pre><code>[1] Introduction
+[2] Hear It
+[3] Example Words
+[4] Blending Practice
+[5] Tricky Words (if applicable)
+[6] Mini Game
+[7] Complete
+</code></pre>
+<p>Each step shows a small <strong>📖 floating button</strong> in the corner. Tapping it opens a bottom sheet with parent guidance for that specific step — without leaving the lesson. The child's content stays visible behind the sheet.</p>
+<p><strong>[1] Introduction</strong>
+- Large grapheme displayed centre screen
+- Phoneme written in IPA (e.g. /ʃ/ for <em>sh</em>)
+- Mnemonic image (e.g. finger to lips for <em>sh</em>)
+- 📖 sheet: "This is the /ʃ/ sound, written as <em>sh</em>. It's like the sound you make to ask someone to be quiet."</p>
+<p><strong>[2] Hear It</strong>
+- Large tap-to-play button
+- Animated mouth showing articulation
+- Slow/normal audio speed toggle
+- IPA notation with a plain-English explanation: "Your lips come together and air pushes through — no voice"
+- 📖 sheet: "Listen carefully. Then try to say it yourself before playing it to your child."</p>
+<p><strong>[3] Example Words</strong>
+- 3–4 words containing the target grapheme
+- Each word shown with the target grapheme highlighted
+- Tap each word to hear it spoken
+- Image alongside each word
+- 📖 sheet: pronunciation tip for any words non-native speakers commonly mispronounce</p>
+<p><strong>[4] Blending Practice</strong>
+- Words broken into phoneme segments: <em>sh · i · p</em>
+- Tap each segment to hear the sound
+- Tap the full word to hear it blended
+- Arrows animate left-to-right to show blending direction
+- 📖 sheet: "Help your child sweep their finger under each sound as they say it, then run it smoothly under the whole word"</p>
+<p><strong>[5] Tricky Words</strong> <em>(if the lesson introduces any)</em>
+- Card per tricky word
+- Audio for each
+- Visual highlight showing which part follows the rules and which doesn't
+- 📖 sheet: plain explanation — e.g. "The word <em>said</em> looks like it should say /seɪd/ but it says /sɛd/. Just learn it by sight."</p>
+<p><strong>[6] Mini Game</strong>
+- Rotating set of game types (see Section 4.6)
+- Difficulty scales to the child's recent accuracy
+- 📖 sheet: what skill the game is practising and how to help if the child gets stuck</p>
+<p><strong>[7] Complete</strong>
+- Celebration animation, star earned
+- Summary: "You learned the /ʃ/ sound today"
+- 📖 sheet: one or two suggested home activities to try before the next lesson</p>
+<hr />
+<h3>4.5 Practice</h3>
+<p>Adaptive drilling section, separate from the curriculum flow. Suitable for solo child use after a parent has introduced the content.</p>
+<p><strong>Recommended</strong> — app selects 3 sounds with lowest recent accuracy for a quick 5-minute session.</p>
+<p><strong>Weak sounds</strong> — list of all sounds below a configurable accuracy threshold (default 75%), each showing a percentage.</p>
+<p><strong>Custom practice</strong> — parent or child selects any learned sounds to drill.</p>
+<p><strong>Drill types (rotated)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Drill</th>
+<th>What it tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sound → Grapheme</td>
+<td>Hear a sound, choose the correct letter(s) from 4 options</td>
+</tr>
+<tr>
+<td>Grapheme → Sound</td>
+<td>See a letter/digraph, tap the button that makes the right sound</td>
+</tr>
+<tr>
+<td>Blend the word</td>
+<td>See a word broken into segments, blend and choose the correct image</td>
+</tr>
+<tr>
+<td>Segment the word</td>
+<td>Hear a word, tap the correct number of phonemes, then place each one</td>
+</tr>
+<tr>
+<td>Tricky word flash</td>
+<td>See a word for 2 seconds, say it aloud, tap to hear correct answer</td>
+</tr>
+<tr>
+<td>Sound in word</td>
+<td>Hear a word, identify which position the target sound is in (start / middle / end)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>4.6 Play</h3>
+<p>Standalone games that reinforce learned sounds without following the lesson sequence. All games are available from the start — the parent chooses what's appropriate for their child.</p>
+<table>
+<thead>
+<tr>
+<th>Game</th>
+<th>Mechanic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sound Hunt</strong></td>
+<td>Hear a target sound, tap all pictures whose names contain it</td>
+</tr>
+<tr>
+<td><strong>Build the Word</strong></td>
+<td>Letter tiles scattered on screen, drag them into the correct order</td>
+</tr>
+<tr>
+<td><strong>Tricky Word Challenge</strong></td>
+<td>Flashcard speed game — say the word before the timer runs out</td>
+</tr>
+<tr>
+<td><strong>Blending Race</strong></td>
+<td>Phoneme sounds play one by one; blend and tap the correct word</td>
+</tr>
+<tr>
+<td><strong>Rhyme Finder</strong></td>
+<td>Shown a word, choose all rhyming words from a set</td>
+</tr>
+<tr>
+<td><strong>Sound Snap</strong></td>
+<td>Card flip game — match grapheme cards to picture cards</td>
+</tr>
+<tr>
+<td><strong>Spelling Bee</strong></td>
+<td>Hear a word, spell it by selecting letter tiles (segmenting)</td>
+</tr>
+<tr>
+<td><strong>Sentence Builder</strong></td>
+<td>Arrange word cards to form a given caption</td>
+</tr>
+</tbody>
+</table>
+<p>Each game lets the parent choose which sounds or phase to practise — so the content is targeted even if the game itself is always accessible. Games track a personal best (accuracy or time). No internet leaderboards — this is a family app.</p>
+<hr />
+<h3>4.7 Library</h3>
+<p>Reference section, primarily for parents. Browsable, not gated by progress.</p>
+<h4>Sound Chart</h4>
+<ul>
+<li>All ~44 phonemes in a grid</li>
+<li>Each cell: grapheme(s), IPA symbol, tap to hear</li>
+<li>Filter by phase</li>
+<li>Each cell shows: "When your child will learn this" and common spellings of the same sound</li>
+</ul>
+<h4>Word Bank</h4>
+<ul>
+<li>All words introduced in lessons, filterable by:</li>
+<li>Phase</li>
+<li>Specific sound</li>
+<li>Word type (decodable / tricky)</li>
+<li>Each word: tap to hear, see which sounds it contains highlighted</li>
+<li>Parents can mark words their child has mastered or is struggling with</li>
+</ul>
+<h4>Tricky Words List</h4>
+<ul>
+<li>All tricky words organised by phase</li>
+<li>Each word: audio, which part is irregular, memory tip</li>
+<li>Mastery tracker (learned / in progress / not started)</li>
+</ul>
+<h4>Parent Guides</h4>
+<p>One guide per phase. Written in plain English. Each guide contains:</p>
+<ol>
+<li><strong>What your child is learning</strong> — plain summary of phase objectives</li>
+<li><strong>Key vocabulary</strong> — terms used in the app, explained simply</li>
+<li><strong>Sounds guide</strong> — audio for every sound in the phase, with:</li>
+<li>How to make the sound (mouth position described)</li>
+<li>Common mispronunciations by non-native speakers (e.g. /v/ vs /w/, /θ/ vs /d/, /ɹ/ vs /r/)</li>
+<li>IPA symbol</li>
+<li><strong>Home practice ideas</strong> — 5 activities needing no materials</li>
+<li><strong>What to say</strong> — scripts for common teaching moments (e.g. "Sweep your finger under the letters as we say each sound…")</li>
+<li><strong>Signs of progress</strong> — what to look for before moving to the next phase</li>
+<li><strong>Common questions</strong> — FAQ for parents (Why is 'the' a tricky word? What if my child skips a sound? Is my accent a problem?)</li>
+</ol>
+<h4>Glossary</h4>
+<p>Alphabetical list of every phonics term used in the app, each with:
+- Plain-English definition
+- Example
+- Audio pronunciation of the term itself</p>
+<hr />
+<h3>4.8 Progress</h3>
+<h4>Child view (visible to child)</h4>
+<ul>
+<li>Star count and streak</li>
+<li>Phase progress bars</li>
+<li>Badges / achievements unlocked</li>
+<li>Recent activity ("You learned 3 new sounds this week!")</li>
+</ul>
+<h4>Parent dashboard</h4>
+<ul>
+<li>Per-phase completion and accuracy breakdown</li>
+<li>Accuracy per individual sound — colour-coded (green / amber / red)</li>
+<li>Time spent per week (chart)</li>
+<li>Tricky words: mastered vs in progress</li>
+<li>Suggested next focus areas</li>
+<li>Weekly summary (shareable, e.g. to show a teacher)</li>
+</ul>
+<hr />
+<h2>5. Content Model</h2>
+<pre><code>Phase
+  id: number (1–6)
+  title: string
+  description: string
+  yearGroup: string              // &quot;Reception&quot;, &quot;Year 1&quot;, &quot;Year 2&quot;
+  parentGuide: ParentGuide
+
+  Lesson
+    id: string
+    title: string
+    description: string
+    type: &quot;phoneme&quot; | &quot;oral&quot; | &quot;consolidation&quot;
+
+    Phoneme
+      id: string
+      grapheme: string           // &quot;sh&quot;
+      alternativeGraphemes: string[]  // [&quot;ti&quot;, &quot;ci&quot;] for /ʃ/ in Phase 5
+      sound: string              // plain: &quot;sh&quot;
+      ipa: string                // &quot;/ʃ/&quot;
+      mnemonic: string           // &quot;Shhhh, be quiet!&quot;
+      mnemonicImage: AssetRef
+      articulationNotes: string  // plain English description of mouth position
+      parentPronunciationTip: string  // for non-native speakers
+      audio: AudioRef
+
+      examples: Word[]
+        word: string
+        audio: AudioRef
+        image: AssetRef
+        graphemePosition: number[]  // highlighted character indices
+
+      blendingWords: BlendableWord[]
+        word: string
+        segments: string[]       // [&quot;sh&quot;, &quot;i&quot;, &quot;p&quot;]
+        audio: AudioRef
+        segmentAudio: AudioRef[] // audio per segment
+
+      trickyWords: TrickyWord[]
+        word: string
+        audio: AudioRef
+        irregularPart: string    // what makes it tricky
+        explanation: string
+
+      parentTips: string[]       // home practice suggestions
+
+ParentGuide
+  phaseId: number
+  overview: string
+  keyVocabulary: GlossaryEntry[]
+  soundsGuide: SoundGuideEntry[]
+  homePracticeIdeas: string[]
+  teachingScripts: Script[]
+  progressSigns: string[]
+  faq: FAQEntry[]
+</code></pre>
+<hr />
+<h2>6. Key Features for Non-Native Speaking Parents</h2>
+<p>These features are the most important differentiators from other phonics apps, which typically assume the parent is a native English speaker.</p>
+<h3>6.1 Parent Pronunciation Studio</h3>
+<p>A dedicated screen within the Parent Guide for each phase where the parent can:
+- Hear every sound in the phase
+- See animated mouth position
+- Record themselves and play back (to practise before teaching their child)
+- See contrast pairs: sounds that are often confused by speakers of specific language backgrounds (e.g. /v/ vs /w/ for many European speakers, /θ/ and /ð/ for almost everyone, /æ/ vs /ɛ/ for many)</p>
+<h3>6.2 "Before you teach" prompts</h3>
+<p>Before starting a new lesson, the app shows the parent a 30-second summary:
+- "Today your child will learn the /ʃ/ sound, written as <em>sh</em>"
+- Audio button: "Tap to hear what it sounds like"
+- "Tip: make sure you can say this sound before the lesson"</p>
+<h3>6.3 Transparent IPA</h3>
+<p>Every phoneme in the app shows its IPA symbol alongside plain-English description. Parents who are learning English themselves may find IPA more reliable than relying on their own mental model of a sound.</p>
+<h3>6.4 Teaching scripts</h3>
+<p>The 📖 floating button during lesson flow surfaces exact suggested phrasing the parent can say aloud. For example:</p>
+<blockquote>
+<p><em>"Look at these two letters together: s and h. When we see them together, they make one sound: /ʃ/. Listen — [tap audio]. Can you say it? Good. Now let's find that sound in some words."</em></p>
+</blockquote>
+<p>Scripts are written in simple English and can be translated via in-app language settings (display language — the audio content remains in English).</p>
+<h3>6.5 Glossary always accessible</h3>
+<p>A persistent "?" icon appears next to every piece of phonics terminology throughout the app. Tapping it opens a plain-English explanation in a bottom sheet, with audio pronunciation of the term.</p>
+<h3>6.6 Accent reassurance</h3>
+<p>The app explicitly addresses accent anxiety in the Parent Guide introduction:</p>
+<blockquote>
+<p><em>"Your accent doesn't matter. What matters is that your child hears the sounds clearly. Use the app's audio as your model — listen to it yourself first, then play it together. You don't need to sound like the audio; you just need to help your child notice the sounds."</em></p>
+</blockquote>
+<hr />
+<h2>7. Navigation Structure</h2>
+<pre><code>Bottom tab bar (always visible in app)
+├── Learn     (book icon)
+├── Practice  (target icon)
+├── Play      (game controller icon)
+├── Library   (bookmark icon)
+└── Progress  (chart icon)
+
+Top bar
+├── Left:  Phase/lesson breadcrumb (or back arrow in lesson flow)
+├── Centre: App logo (taps to home)
+└── Right: Settings
+</code></pre>
+<p>Lesson flow uses a full-screen modal with its own back button and progress bar — the main tab bar is hidden during active lessons to reduce distraction.</p>
+<hr />
+<h2>8. Gaps in the Figma POC vs This Specification</h2>
+<p>The Figma POC explored the core learn/practice/games/word-bank/profile loop well. The following areas are new or significantly expanded in this specification:</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>POC</th>
+<th>This spec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parent guidance</td>
+<td>Not present</td>
+<td>Briefing card on phase/lesson views; floating 📖 button during lesson flow</td>
+</tr>
+<tr>
+<td>Phase 1 content</td>
+<td>Empty / placeholder</td>
+<td>7 interactive oral activities</td>
+</tr>
+<tr>
+<td>IPA / pronunciation guidance</td>
+<td>Not present</td>
+<td>On every phoneme</td>
+</tr>
+<tr>
+<td>Articulation notes</td>
+<td>Not present</td>
+<td>Per phoneme, with mouth animations</td>
+</tr>
+<tr>
+<td>Parent guides</td>
+<td>Not present</td>
+<td>Full guide per phase</td>
+</tr>
+<tr>
+<td>Teaching scripts</td>
+<td>Not present</td>
+<td>Embedded in lesson flow</td>
+</tr>
+<tr>
+<td>Glossary</td>
+<td>Not present</td>
+<td>Persistent, always accessible</td>
+</tr>
+<tr>
+<td>Accent reassurance</td>
+<td>Not present</td>
+<td>In onboarding and Phase 1 guide</td>
+</tr>
+<tr>
+<td>Content model</td>
+<td>Partial</td>
+<td>Fully specified</td>
+</tr>
+<tr>
+<td>Drill types</td>
+<td>1 game type</td>
+<td>6 drill types + 8 games</td>
+</tr>
+<tr>
+<td>Tricky word explanations</td>
+<td>Words listed only</td>
+<td>Why + memory tips</td>
+</tr>
+<tr>
+<td>Phase 5/6 content</td>
+<td>Stub only</td>
+<td>Fully described</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>9. Out of Scope (for v1)</h2>
+<ul>
+<li><strong>Platforms:</strong> Android and iOS only. No web, macOS, Windows or Linux builds.</li>
+<li>Handwriting / letter formation exercises (the framework covers this but it needs a separate pencil-control interaction model)</li>
+<li>Classroom / multi-child mode</li>
+<li>Teacher reporting</li>
+<li>Curriculum alignment reports for specific UK schools</li>
+<li>Online sync / cloud backup (can be added later)</li>
+<li>Languages other than English for the parent UI (architecture supports it, not in v1)</li>
+</ul>
+</body>
+</html>
