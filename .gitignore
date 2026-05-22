@@ -57,3 +57,6 @@ app.*.map.json
 # Environment / secrets
 .env
 .env.*
+
+# Epic issue template — used once to create the GitHub issue, not part of the repo
+EPIC_PHASE1.md

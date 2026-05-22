@@ -90,3 +90,63 @@ Custom stream-based ViewModel (see above). No Riverpod, Provider, or Bloc.
 ## Design system
 
 Material 3 with an Apple-inspired skin. Always use `AppColors.*` constants — never hardcode colours. Cupertino icons throughout. Theme defined in `lib/theme/`.
+
+## File structure
+
+One public class per file. Private helper classes (`_ClassName`) may live in the same file as their parent. Never place two independently navigable screens or two exported classes in one file.
+
+## Accessibility
+
+Every interactive element must have:
+- A `Semantics` widget or `semanticLabel` describing its action
+- Support for keyboard/switch navigation (never use bare `GestureDetector` without `Semantics`)
+- Sufficient colour contrast — WCAG AA minimum (4.5:1 for normal text, 3:1 for large text)
+
+## Testing
+
+Target 100% test coverage on all new and modified code. Every PR must include:
+- Unit tests for any new or changed ViewModel (test all state transitions via the stream)
+- Unit tests for any new or changed Repository
+- Widget tests for any new or changed widget
+- Integration tests for any new or changed Service
+
+Run `flutter test --coverage` before opening a PR.
+
+## Reference documents
+
+These live in `docs/` and must be read before writing any Phase 1 issue or touching Phase 1 content:
+- `docs/Letters_and_Sounds_-_DFES-00281-2007.pdf` — the UK Letters and Sounds framework this app is based on
+- `docs/phonics-app-information-architecture.html` — full feature specification and screen-by-screen breakdown
+
+## Agent rules
+
+These rules apply to all automated agents working on this repository.
+
+**Branching**
+- Always branch from `main`: `feat/issue-N-short-title` for features, `fix/issue-N-short-title` for bug fixes
+- Never push directly to `main`
+- Never force-push
+
+**Pull requests**
+- Every PR must link its sub-issue and the Phase 1 epic in the body
+- Open PRs as drafts; only the `phonix-pr-reviewer` routine marks them ready for review
+- Write a clear test plan in the PR body
+
+**Issues**
+- `phonix-issue-creator` creates one sub-issue at a time from `EPIC_PHASE1.md`, only after the previous sub-issue is closed
+- Every sub-issue must have: context, acceptance criteria, and a definition of done
+- Read the reference documents before writing any Phase 1 issue
+
+**Colour palette tasks**
+- When a task says "propose 2–3 alternatives as separate branches", create each branch from `main` independently — do not build branches on top of each other
+- Name them: `palette/option-a-<approach>`, `palette/option-b-<approach>`, `palette/option-c-<approach>`
+
+**Loop behaviour (issue-creator ↔ issue-validator, implementer ↔ pr-reviewer)**
+- If the other agent raises concerns, address every point before re-requesting review
+- After 3 rounds of unresolved disagreement, label the item `escalated` and post a summary for the user
+
+**Never**
+- Skip tests
+- Hardcode colours (use `AppColors.*`)
+- Import Flutter widgets in a ViewModel
+- Import repositories or services directly in a View
