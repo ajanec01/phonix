@@ -12,7 +12,7 @@ permissions:
   pull-requests: write
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '24'
 
 jobs:
   # ── ISSUE TRACK ────────────────────────────────────────────────────────────
@@ -22,12 +22,12 @@ jobs:
     if: github.event_name == 'issues' && github.event.label.name == 'next'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '24'
       - run: npm install -g @anthropic-ai/claude-code
       - name: Verify epic label and run issue-creator
         env:
@@ -48,12 +48,12 @@ jobs:
     if: github.event_name == 'issues' && github.event.label.name == 'user:needs-clarification'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '24'
       - run: npm install -g @anthropic-ai/claude-code
       - name: Run issue-creator (user feedback mode)
         env:
@@ -71,13 +71,13 @@ jobs:
     if: github.event_name == 'issues' && github.event.label.name == 'approved'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '24'
       - run: npm install -g @anthropic-ai/claude-code
       - name: Configure git
         run: |
@@ -98,13 +98,13 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.label.name == 'user:needs-clarification'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '24'
       - run: npm install -g @anthropic-ai/claude-code
       - name: Configure git
         run: |
