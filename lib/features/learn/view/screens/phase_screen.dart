@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../theme/app_colors.dart';
 import '../widgets/shimmer_box.dart';
-import '../../data/repository/curriculum_repository.dart';
-import '../../data/service/local_curriculum_service.dart';
-import '../../data/service/remote_curriculum_service.dart';
 import '../../domain/model/aspect.dart';
 import '../../domain/model/phase.dart';
 import '../../viewmodel/aspect_state.dart';
@@ -14,8 +11,9 @@ import '../widgets/aspect_card.dart';
 import '../widgets/bullet_list.dart';
 
 class PhaseScreen extends StatefulWidget {
-  const PhaseScreen({super.key, required this.phase});
+  const PhaseScreen({super.key, required this.phase, required this.viewModel});
   final Phase phase;
+  final AspectViewModel viewModel;
 
   @override
   State<PhaseScreen> createState() => _PhaseScreenState();
@@ -23,26 +21,18 @@ class PhaseScreen extends StatefulWidget {
 
 class _PhaseScreenState extends State<PhaseScreen> {
   bool _briefingExpanded = true;
-  late final AspectViewModel _aspectViewModel;
 
   Color get _phaseColor => AppColors.phases[widget.phase.id - 1];
 
   @override
   void initState() {
     super.initState();
-    _aspectViewModel = AspectViewModel(
-      repository: CurriculumRepository(
-        remote: RemoteCurriculumService(),
-        local: LocalCurriculumService(),
-      ),
-      phaseNumber: widget.phase.id,
-    );
-    _aspectViewModel.load();
+    widget.viewModel.load();
   }
 
   @override
   void dispose() {
-    _aspectViewModel.dispose();
+    widget.viewModel.dispose();
     super.dispose();
   }
 
@@ -71,12 +61,11 @@ class _PhaseScreenState extends State<PhaseScreen> {
             ),
           ),
           SliverToBoxAdapter(
-            child: StreamBuilder<AspectState>(
-              stream: _aspectViewModel.stream,
-              initialData: _aspectViewModel.state,
-              builder: (context, snapshot) {
+            child: ListenableBuilder(
+              listenable: widget.viewModel,
+              builder: (context, _) {
                 final color = _phaseColor;
-                return switch (snapshot.data!) {
+                return switch (widget.viewModel.state) {
                   AspectStateLoading() => _AspectsLoading(),
                   AspectStateLoaded(:final aspects) when aspects.isEmpty =>
                     const SizedBox.shrink(),

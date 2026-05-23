@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
+import '../../data/repository/curriculum_repository.dart';
+import '../../data/service/local_curriculum_service.dart';
+import '../../data/service/remote_curriculum_service.dart';
 import '../../domain/model/phase.dart';
+import '../../viewmodel/aspect_viewmodel.dart';
 import '../screens/phase_screen.dart';
 
 class PhaseCard extends StatelessWidget {
@@ -10,51 +14,55 @@ class PhaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _navigateToPhase(context, phase),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.outlineVariant),
-        ),
-        clipBehavior: Clip.hardEdge,
-        child: IntrinsicHeight(
-          child: Row(
-            children: [
-              Container(width: 4, color: AppColors.phases[phase.id - 1]),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              phase.title,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              phase.description,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+    return Semantics(
+      label: 'Open ${phase.title}',
+      button: true,
+      child: GestureDetector(
+        onTap: () => _navigateToPhase(context, phase),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.outlineVariant),
+          ),
+          clipBehavior: Clip.hardEdge,
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                Container(width: 4, color: AppColors.phases[phase.id - 1]),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                phase.title,
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                phase.description,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Icon(
-                        CupertinoIcons.chevron_right,
-                        size: 16,
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ],
+                        const SizedBox(width: 12),
+                        const Icon(
+                          CupertinoIcons.chevron_right,
+                          size: 16,
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -64,6 +72,17 @@ class PhaseCard extends StatelessWidget {
 
 void _navigateToPhase(BuildContext context, Phase phase) {
   Navigator.of(context).push(
-    CupertinoPageRoute(builder: (_) => PhaseScreen(phase: phase)),
+    CupertinoPageRoute(
+      builder: (_) => PhaseScreen(
+        phase: phase,
+        viewModel: AspectViewModel(
+          repository: CurriculumRepository(
+            remote: RemoteCurriculumService(),
+            local: LocalCurriculumService(),
+          ),
+          phaseNumber: phase.id,
+        ),
+      ),
+    ),
   );
 }
