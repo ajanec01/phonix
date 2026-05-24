@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
-import '../../data/repository/curriculum_repository.dart';
-import '../../data/service/local_curriculum_service.dart';
-import '../../data/service/remote_curriculum_service.dart';
 import '../../domain/model/phase.dart';
-import '../../viewmodel/aspect_viewmodel.dart';
 import '../screens/phase_screen.dart';
 
 class PhaseCard extends StatelessWidget {
@@ -73,16 +69,7 @@ class PhaseCard extends StatelessWidget {
 void _navigateToPhase(BuildContext context, Phase phase) {
   Navigator.of(context).push(
     CupertinoPageRoute(
-      builder: (_) => PhaseScreen(
-        phase: phase,
-        viewModel: AspectViewModel(
-          repository: CurriculumRepository(
-            remote: RemoteCurriculumService(),
-            local: LocalCurriculumService(),
-          ),
-          phaseNumber: phase.id,
-        ),
-      ),
+      builder: (_) => PhaseScreen(phase: phase),
     ),
   );
 }
