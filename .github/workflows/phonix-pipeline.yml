@@ -5,6 +5,7 @@ on:
     types: [labeled]
   pull_request:
     types: [labeled]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -17,7 +18,7 @@ env:
 jobs:
   # ── ISSUE TRACK ────────────────────────────────────────────────────────────
 
-  # Epic issue labeled 'next' → issue-creator creates the next sub-issue (including internal validation loop)
+  # Epic issue labeled 'next' → issue-creator creates the next sub-issue
   run-issue-creator:
     if: github.event_name == 'issues' && github.event.label.name == 'next'
     runs-on: ubuntu-latest
@@ -37,13 +38,55 @@ jobs:
         run: |
           LABELS=$(gh issue view $ISSUE_NUMBER --json labels -q '.labels[].name')
           if echo "$LABELS" | grep -q "epic"; then
-            claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
+            claude --model claude-sonnet-4-6 --settings '{"advisorModel":"claude-opus-4-7"}' --dangerously-skip-permissions --print \
               "Issue #${ISSUE_NUMBER} (epic) has been labeled 'next'. $(cat .claude/routines/issue-creator.md)"
           else
             echo "Skipping: Issue #${ISSUE_NUMBER} does not have the 'epic' label"
           fi
 
-  # Issue labeled 'user:needs-clarification' → issue-creator addresses feedback (including internal validation loop)
+  # Issue labeled 'needs-validation' → issue-validator reviews the issue
+  run-issue-validator:
+    if: github.event_name == 'issues' && github.event.label.name == 'needs-validation'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Run issue-validator
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
+            "Issue #${ISSUE_NUMBER} has been labeled needs-validation. $(cat .claude/routines/issue-validator.md)"
+
+  # Issue labeled 'agent:issue-revision' → issue-creator addresses validator concerns
+  run-issue-creator-on-revision:
+    if: github.event_name == 'issues' && github.event.label.name == 'agent:issue-revision'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Run issue-creator (revision mode)
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          claude --model claude-sonnet-4-6 --settings '{"advisorModel":"claude-opus-4-7"}' --dangerously-skip-permissions --print \
+            "Issue #${ISSUE_NUMBER} has been labeled agent:issue-revision — the validator has raised concerns. $(cat .claude/routines/issue-creator.md)"
+
+  # Issue labeled 'user:needs-clarification' → issue-creator addresses user feedback
   run-issue-creator-user-feedback:
     if: github.event_name == 'issues' && github.event.label.name == 'user:needs-clarification'
     runs-on: ubuntu-latest
@@ -61,12 +104,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
+          claude --model claude-sonnet-4-6 --settings '{"advisorModel":"claude-opus-4-7"}' --dangerously-skip-permissions --print \
             "Issue #${ISSUE_NUMBER} has been labeled user:needs-clarification — the user has feedback. $(cat .claude/routines/issue-creator.md)"
 
   # ── PR TRACK ───────────────────────────────────────────────────────────────
 
-  # Issue labeled 'approved' → implementer branches, implements, and self-reviews (including internal review loop)
+  # Issue labeled 'approved' → implementer branches and implements
   run-implementer:
     if: github.event_name == 'issues' && github.event.label.name == 'approved'
     runs-on: ubuntu-latest
@@ -90,12 +133,91 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
-          claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
+          claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
             "Issue #${ISSUE_NUMBER}: ${ISSUE_TITLE} has been approved. $(cat .claude/routines/implementer.md)"
 
-  # PR labeled 'user:needs-clarification' → implementer addresses feedback and self-reviews
-  run-implementer-user-feedback:
+  # PR labeled 'needs-peer-review' → pr-reviewer reviews the PR
+  run-pr-reviewer:
+    if: github.event_name == 'pull_request' && github.event.label.name == 'needs-peer-review'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - run: flutter pub get
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Configure git
+        run: |
+          git config --global user.email "phonix-agent@users.noreply.github.com"
+          git config --global user.name "Phonix Agent"
+      - name: Run pr-reviewer
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
+            "PR #${PR_NUMBER} has been labeled needs-peer-review. $(cat .claude/routines/pr-reviewer.md)"
+
+  # PR labeled 'user:needs-clarification' → implementer answers user question (no code changes)
+  run-implementer-user-clarification:
     if: github.event_name == 'pull_request' && github.event.label.name == 'user:needs-clarification'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Run implementer (clarification mode)
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
+            "PR #${PR_NUMBER} has been labeled user:needs-clarification — the user has a question. $(cat .claude/routines/implementer.md)"
+
+  # PR labeled 'agent:pr-revision' → implementer addresses reviewer concerns
+  run-implementer-on-pr-revision:
+    if: github.event_name == 'pull_request' && github.event.label.name == 'agent:pr-revision'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: Configure git
+        run: |
+          git config --global user.email "phonix-agent@users.noreply.github.com"
+          git config --global user.name "Phonix Agent"
+      - name: Run implementer (revision mode)
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
+            "PR #${PR_NUMBER} has been labeled agent:pr-revision — the reviewer has raised concerns. $(cat .claude/routines/implementer.md)"
+
+  # PR labeled 'user:needs-changes' → implementer addresses user feedback
+  run-implementer-user-feedback:
+    if: github.event_name == 'pull_request' && github.event.label.name == 'user:needs-changes'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -116,5 +238,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
-            "PR #${PR_NUMBER} has been labeled user:needs-clarification — the user has feedback. $(cat .claude/routines/implementer.md)"
+          claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
+            "PR #${PR_NUMBER} has been labeled user:needs-changes — the user has feedback. $(cat .claude/routines/implementer.md)"
