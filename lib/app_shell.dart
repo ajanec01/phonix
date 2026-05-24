@@ -16,14 +16,6 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
 
-  static const _screens = [
-    LearnScreen(),
-    PracticeScreen(),
-    PlayScreen(),
-    LibraryScreen(),
-    ProgressScreen(),
-  ];
-
   static const _destinations = [
     NavigationDestination(
       icon: Icon(CupertinoIcons.book),
@@ -57,7 +49,13 @@ class _AppShellState extends State<AppShell> {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: [
+          const LearnScreen(),
+          const PracticeScreen(),
+          const PlayScreen(),
+          const LibraryScreen(),
+          const ProgressScreen(),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,

@@ -12,7 +12,8 @@ import '../widgets/learn_error.dart';
 import '../widgets/learn_skeleton.dart';
 
 class LearnScreen extends StatefulWidget {
-  const LearnScreen({super.key});
+  const LearnScreen({super.key, this.viewModel});
+  final LearnViewModel? viewModel;
 
   @override
   State<LearnScreen> createState() => _LearnScreenState();
@@ -24,15 +25,16 @@ class _LearnScreenState extends State<LearnScreen> {
   @override
   void initState() {
     super.initState();
-    _viewModel = LearnViewModel(
-      curriculumRepository: CurriculumRepository(
-        remote: RemoteCurriculumService(),
-        local: LocalCurriculumService(),
-      ),
-      progressRepository: ProgressRepository(
-        local: LocalProgressService(),
-      ),
-    );
+    _viewModel = widget.viewModel ??
+        LearnViewModel(
+          curriculumRepository: CurriculumRepository(
+            remote: RemoteCurriculumService(),
+            local: LocalCurriculumService(),
+          ),
+          progressRepository: ProgressRepository(
+            local: LocalProgressService(),
+          ),
+        );
     _viewModel.load();
   }
 
@@ -46,11 +48,10 @@ class _LearnScreenState extends State<LearnScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.surfaceContainerLow,
-      body: StreamBuilder<LearnState>(
-        stream: _viewModel.stream,
-        initialData: _viewModel.state,
-        builder: (context, snapshot) {
-          return switch (snapshot.data!) {
+      body: ListenableBuilder(
+        listenable: _viewModel,
+        builder: (context, _) {
+          return switch (_viewModel.state) {
             LearnStateLoading() => const LearnSkeleton(),
             LearnStateLoaded(:final phases, :final currentPhase) =>
               LearnContent(phases: phases, currentPhase: currentPhase),

@@ -14,8 +14,9 @@ import '../widgets/aspect_card.dart';
 import '../widgets/bullet_list.dart';
 
 class PhaseScreen extends StatefulWidget {
-  const PhaseScreen({super.key, required this.phase});
+  const PhaseScreen({super.key, required this.phase, this.viewModel});
   final Phase phase;
+  final AspectViewModel? viewModel;
 
   @override
   State<PhaseScreen> createState() => _PhaseScreenState();
@@ -23,26 +24,27 @@ class PhaseScreen extends StatefulWidget {
 
 class _PhaseScreenState extends State<PhaseScreen> {
   bool _briefingExpanded = true;
-  late final AspectViewModel _aspectViewModel;
+  late final AspectViewModel _viewModel;
 
   Color get _phaseColor => AppColors.phases[widget.phase.id - 1];
 
   @override
   void initState() {
     super.initState();
-    _aspectViewModel = AspectViewModel(
-      repository: CurriculumRepository(
-        remote: RemoteCurriculumService(),
-        local: LocalCurriculumService(),
-      ),
-      phaseNumber: widget.phase.id,
-    );
-    _aspectViewModel.load();
+    _viewModel = widget.viewModel ??
+        AspectViewModel(
+          repository: CurriculumRepository(
+            remote: RemoteCurriculumService(),
+            local: LocalCurriculumService(),
+          ),
+          phaseNumber: widget.phase.id,
+        );
+    _viewModel.load();
   }
 
   @override
   void dispose() {
-    _aspectViewModel.dispose();
+    _viewModel.dispose();
     super.dispose();
   }
 
@@ -71,12 +73,11 @@ class _PhaseScreenState extends State<PhaseScreen> {
             ),
           ),
           SliverToBoxAdapter(
-            child: StreamBuilder<AspectState>(
-              stream: _aspectViewModel.stream,
-              initialData: _aspectViewModel.state,
-              builder: (context, snapshot) {
+            child: ListenableBuilder(
+              listenable: _viewModel,
+              builder: (context, _) {
                 final color = _phaseColor;
-                return switch (snapshot.data!) {
+                return switch (_viewModel.state) {
                   AspectStateLoading() => _AspectsLoading(),
                   AspectStateLoaded(:final aspects) when aspects.isEmpty =>
                     const SizedBox.shrink(),
@@ -175,33 +176,39 @@ class _BriefingCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
-              onTap: onToggle,
-              borderRadius: BorderRadius.circular(14),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
-                child: Row(
-                  children: [
-                    Icon(CupertinoIcons.info_circle_fill,
-                        size: 18, color: color),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'About ${phase.title}',
-                        style:
-                            Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  color: color,
-                                ),
+            Semantics(
+              label: expanded
+                  ? 'Collapse About ${phase.title}'
+                  : 'Expand About ${phase.title}',
+              button: true,
+              child: InkWell(
+                onTap: onToggle,
+                borderRadius: BorderRadius.circular(14),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+                  child: Row(
+                    children: [
+                      Icon(CupertinoIcons.info_circle_fill,
+                          size: 18, color: color),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'About ${phase.title}',
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: color,
+                                  ),
+                        ),
                       ),
-                    ),
-                    Icon(
-                      expanded
-                          ? CupertinoIcons.chevron_up
-                          : CupertinoIcons.chevron_down,
-                      size: 14,
-                      color: color,
-                    ),
-                  ],
+                      Icon(
+                        expanded
+                            ? CupertinoIcons.chevron_up
+                            : CupertinoIcons.chevron_down,
+                        size: 14,
+                        color: color,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -248,27 +255,31 @@ class _TipsSectionState extends State<_TipsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: () => setState(() => _expanded = !_expanded),
-          child: Row(
-            children: [
-              Icon(CupertinoIcons.lightbulb, size: 15, color: widget.color),
-              const SizedBox(width: 6),
-              Text(
-                'Tips for home',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: widget.color,
-                    ),
-              ),
-              const SizedBox(width: 4),
-              Icon(
-                _expanded
-                    ? CupertinoIcons.chevron_up
-                    : CupertinoIcons.chevron_down,
-                size: 12,
-                color: widget.color,
-              ),
-            ],
+        Semantics(
+          label: _expanded ? 'Collapse tips for home' : 'Expand tips for home',
+          button: true,
+          child: GestureDetector(
+            onTap: () => setState(() => _expanded = !_expanded),
+            child: Row(
+              children: [
+                Icon(CupertinoIcons.lightbulb, size: 15, color: widget.color),
+                const SizedBox(width: 6),
+                Text(
+                  'Tips for home',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: widget.color,
+                      ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  _expanded
+                      ? CupertinoIcons.chevron_up
+                      : CupertinoIcons.chevron_down,
+                  size: 12,
+                  color: widget.color,
+                ),
+              ],
+            ),
           ),
         ),
         if (_expanded) ...[

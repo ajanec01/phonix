@@ -1,18 +1,13 @@
-import 'dart:async';
+import 'package:flutter/foundation.dart';
 
-abstract class ViewModel<S> {
+abstract class ViewModel<S> extends ChangeNotifier {
   ViewModel(S initialState) : _state = initialState;
 
   S _state;
   S get state => _state;
 
-  final _controller = StreamController<S>.broadcast();
-  Stream<S> get stream => _controller.stream;
-
   void emit(S newState) {
     _state = newState;
-    _controller.add(newState);
+    notifyListeners();
   }
-
-  void dispose() => _controller.close();
 }

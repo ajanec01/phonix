@@ -7,10 +7,10 @@ Layered MVVM, following the official Flutter app architecture guide.
 ### Layers
 
 **View** (`view/`)
-StatelessWidget or StatefulWidget. UI rendering only: layout, sizing, conditional display based on state. No business logic. Listens to ViewModel via `StreamBuilder` with `initialData: viewModel.state`.
+StatelessWidget or StatefulWidget. UI rendering only: layout, sizing, conditional display based on state. No business logic. Listens to ViewModel via `ListenableBuilder`.
 
 **ViewModel** (`viewmodel/`)
-Extends `ViewModel<S>`. Owns and emits UI state via a broadcast stream with a cached last value. Triggers use cases or repository calls in response to user actions. No Flutter widget imports.
+Extends `ViewModel<S>`. Owns and emits UI state as a `ChangeNotifier` with a cached last value. Triggers use cases or repository calls in response to user actions. No Flutter widget imports.
 
 **Use Case** (`domain/usecase/`)
 Single `call()` method. Only add one when the repository response requires transformation before reaching the ViewModel. Omit if repo data maps directly to UI state.
@@ -29,34 +29,30 @@ Plain Dart classes. No Flutter imports.
 Lives at `lib/core/viewmodel/view_model.dart`.
 
 ```dart
-abstract class ViewModel<S> {
+import 'package:flutter/foundation.dart';
+
+abstract class ViewModel<S> extends ChangeNotifier {
   ViewModel(S initialState) : _state = initialState;
 
   S _state;
   S get state => _state;
 
-  final _controller = StreamController<S>.broadcast();
-  Stream<S> get stream => _controller.stream;
-
   void emit(S newState) {
     _state = newState;
-    _controller.add(newState);
+    notifyListeners();
   }
-
-  void dispose() => _controller.close();
 }
 ```
 
-### StreamBuilder pattern in views
+### ListenableBuilder pattern in views
 
-Always pass `initialData: viewModel.state` so the view renders immediately with the cached state:
+`viewModel.state` is always typed — no force-unwrap needed:
 
 ```dart
-StreamBuilder<MyState>(
-  stream: viewModel.stream,
-  initialData: viewModel.state,
-  builder: (context, snapshot) {
-    final state = snapshot.requireData;
+ListenableBuilder(
+  listenable: viewModel,
+  builder: (context, _) {
+    final state = viewModel.state;
     // build UI from state
   },
 )
@@ -85,7 +81,7 @@ lib/features/<feature>/
 
 ## State management
 
-Custom stream-based ViewModel (see above). No Riverpod, Provider, or Bloc.
+`ChangeNotifier`-based ViewModel (see above). No Riverpod, Provider, or Bloc.
 
 ## Design system
 
@@ -105,7 +101,7 @@ Every interactive element must have:
 ## Testing
 
 Target 100% test coverage on all new and modified code. Every PR must include:
-- Unit tests for any new or changed ViewModel (test all state transitions via the stream)
+- Unit tests for any new or changed ViewModel (test all state transitions via `addListener`)
 - Unit tests for any new or changed Repository
 - Widget tests for any new or changed widget
 - Integration tests for any new or changed Service
