@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
+import '../../data/repository/curriculum_repository.dart';
+import '../../data/repository/progress_repository.dart';
+import '../../data/service/local_curriculum_service.dart';
+import '../../data/service/local_progress_service.dart';
+import '../../data/service/remote_curriculum_service.dart';
 import '../../viewmodel/learn_state.dart';
 import '../../viewmodel/learn_viewmodel.dart';
 import '../widgets/learn_content.dart';
@@ -7,23 +12,35 @@ import '../widgets/learn_error.dart';
 import '../widgets/learn_skeleton.dart';
 
 class LearnScreen extends StatefulWidget {
-  const LearnScreen({super.key, required this.viewModel});
-  final LearnViewModel viewModel;
+  const LearnScreen({super.key, this.viewModel});
+  final LearnViewModel? viewModel;
 
   @override
   State<LearnScreen> createState() => _LearnScreenState();
 }
 
 class _LearnScreenState extends State<LearnScreen> {
+  late final LearnViewModel _viewModel;
+
   @override
   void initState() {
     super.initState();
-    widget.viewModel.load();
+    _viewModel = widget.viewModel ??
+        LearnViewModel(
+          curriculumRepository: CurriculumRepository(
+            remote: RemoteCurriculumService(),
+            local: LocalCurriculumService(),
+          ),
+          progressRepository: ProgressRepository(
+            local: LocalProgressService(),
+          ),
+        );
+    _viewModel.load();
   }
 
   @override
   void dispose() {
-    widget.viewModel.dispose();
+    _viewModel.dispose();
     super.dispose();
   }
 
@@ -32,9 +49,9 @@ class _LearnScreenState extends State<LearnScreen> {
     return Scaffold(
       backgroundColor: AppColors.surfaceContainerLow,
       body: ListenableBuilder(
-        listenable: widget.viewModel,
+        listenable: _viewModel,
         builder: (context, _) {
-          return switch (widget.viewModel.state) {
+          return switch (_viewModel.state) {
             LearnStateLoading() => const LearnSkeleton(),
             LearnStateLoaded(:final phases, :final currentPhase) =>
               LearnContent(phases: phases, currentPhase: currentPhase),

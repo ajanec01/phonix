@@ -1,12 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'features/learn/data/repository/curriculum_repository.dart';
-import 'features/learn/data/repository/progress_repository.dart';
-import 'features/learn/data/service/local_curriculum_service.dart';
-import 'features/learn/data/service/local_progress_service.dart';
-import 'features/learn/data/service/remote_curriculum_service.dart';
 import 'features/learn/view/screens/learn_screen.dart';
-import 'features/learn/viewmodel/learn_viewmodel.dart';
 import 'features/library/library_screen.dart';
 import 'features/play/play_screen.dart';
 import 'features/practice/practice_screen.dart';
@@ -21,21 +15,6 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
-  late final LearnViewModel _learnViewModel;
-
-  @override
-  void initState() {
-    super.initState();
-    _learnViewModel = LearnViewModel(
-      curriculumRepository: CurriculumRepository(
-        remote: RemoteCurriculumService(),
-        local: LocalCurriculumService(),
-      ),
-      progressRepository: ProgressRepository(
-        local: LocalProgressService(),
-      ),
-    );
-  }
 
   static const _destinations = [
     NavigationDestination(
@@ -71,7 +50,7 @@ class _AppShellState extends State<AppShell> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          LearnScreen(viewModel: _learnViewModel),
+          const LearnScreen(),
           const PracticeScreen(),
           const PlayScreen(),
           const LibraryScreen(),
