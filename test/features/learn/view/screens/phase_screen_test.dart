@@ -114,7 +114,7 @@ void main() {
     });
 
     testWidgets('briefing card collapses when header is tapped', (tester) async {
-      final vm = _FakeAspectViewModel(AspectStateLoading());
+      final vm = _FakeAspectViewModel(AspectStateLoaded(aspects: const []));
       await tester.pumpWidget(_wrap(vm));
 
       // Briefing content is visible initially (expanded = true).
@@ -129,7 +129,7 @@ void main() {
     });
 
     testWidgets('tips section expands when tapped and shows bullet list', (tester) async {
-      final vm = _FakeAspectViewModel(AspectStateLoading());
+      final vm = _FakeAspectViewModel(AspectStateLoaded(aspects: const []));
       await tester.pumpWidget(_wrap(vm));
 
       // Tips content is hidden initially (_expanded = false).
