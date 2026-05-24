@@ -33,7 +33,7 @@ jobs:
       - name: Verify epic label and run issue-creator
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           LABELS=$(gh issue view $ISSUE_NUMBER --json labels -q '.labels[].name')
@@ -59,7 +59,7 @@ jobs:
       - name: Run issue-validator
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
@@ -80,7 +80,7 @@ jobs:
       - name: Run issue-creator (revision mode)
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           claude --model claude-sonnet-4-6 --settings '{"advisorModel":"claude-opus-4-7"}' --dangerously-skip-permissions --print \
@@ -101,7 +101,7 @@ jobs:
       - name: Run issue-creator (user feedback mode)
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           claude --model claude-sonnet-4-6 --settings '{"advisorModel":"claude-opus-4-7"}' --dangerously-skip-permissions --print \
@@ -129,7 +129,7 @@ jobs:
       - name: Run implementer
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
@@ -161,7 +161,7 @@ jobs:
       - name: Run pr-reviewer
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
@@ -183,7 +183,7 @@ jobs:
       - name: Run implementer (clarification mode)
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
@@ -209,7 +209,7 @@ jobs:
       - name: Run implementer (revision mode)
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
@@ -235,7 +235,7 @@ jobs:
       - name: Run implementer (user feedback mode)
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AGENT_GH_PAT }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
