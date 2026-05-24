@@ -37,7 +37,7 @@ jobs:
         run: |
           LABELS=$(gh issue view $ISSUE_NUMBER --json labels -q '.labels[].name')
           if echo "$LABELS" | grep -q "epic"; then
-            claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
+            claude --model claude-sonnet-4-6 --settings '{"advisorModel":"claude-opus-4-7"}' --dangerously-skip-permissions --print \
               "Issue #${ISSUE_NUMBER} (epic) has been labeled 'next'. $(cat .claude/routines/issue-creator.md)"
           else
             echo "Skipping: Issue #${ISSUE_NUMBER} does not have the 'epic' label"
@@ -61,7 +61,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
+          claude --model claude-sonnet-4-6 --settings '{"advisorModel":"claude-opus-4-7"}' --dangerously-skip-permissions --print \
             "Issue #${ISSUE_NUMBER} has been labeled user:needs-clarification — the user has feedback. $(cat .claude/routines/issue-creator.md)"
 
   # ── PR TRACK ───────────────────────────────────────────────────────────────
