@@ -90,7 +90,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
-          claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
+          claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
             "Issue #${ISSUE_NUMBER}: ${ISSUE_TITLE} has been approved. $(cat .claude/routines/implementer.md)"
 
   # PR labeled 'user:needs-clarification' → implementer addresses feedback and self-reviews
@@ -116,5 +116,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          claude --model claude-sonnet-4-6 --dangerously-skip-permissions --print \
+          claude --model claude-opus-4-7 --dangerously-skip-permissions --print \
             "PR #${PR_NUMBER} has been labeled user:needs-clarification — the user has feedback. $(cat .claude/routines/implementer.md)"
