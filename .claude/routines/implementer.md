@@ -65,8 +65,12 @@ On escalate: add label `agent:escalated` to the PR, post a summary for the user,
 
 ## Mode B — address user feedback on a PR
 
-1. Read the PR and all comments: `gh pr view <pr-number> --comments`.
-2. Find the user's comment with their feedback.
+1. Read the PR and all feedback in one call:
+   `gh pr view <pr-number> --json title,body,comments,reviewThreads,reviews`
+   - `comments` — top-level conversation comments
+   - `reviewThreads` — inline line-level code comments (includes `path`, `line`, `diffHunk` so you know exactly where each comment applies)
+   - `reviews` — review submission bodies (e.g., a CHANGES_REQUESTED summary message)
+2. Collect **every** comment the user left — top-level, inline, and review bodies — and treat each as a required change. Do not skip any.
 3. Check out the PR branch.
 4. Make every change the user requested.
 5. Run `flutter analyze` and `flutter test --coverage` — both must pass.
