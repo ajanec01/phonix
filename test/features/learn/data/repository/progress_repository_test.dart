@@ -37,7 +37,7 @@ void main() {
 
     test('propagates exception thrown by local.fetchProgress', () async {
       final error = Exception('fetch failed');
-      when(() => local.fetchProgress()).thenThrow(error);
+      when(() => local.fetchProgress()).thenAnswer((_) async => throw error);
 
       await expectLater(
         repository.getProgress(),
@@ -62,7 +62,8 @@ void main() {
     test('propagates exception thrown by local.saveProgress', () async {
       const progress = UserProgress(currentPhaseId: 2);
       final error = Exception('save failed');
-      when(() => local.saveProgress(progress)).thenThrow(error);
+      when(() => local.saveProgress(progress))
+          .thenAnswer((_) async => throw error);
 
       await expectLater(
         repository.saveProgress(progress),
