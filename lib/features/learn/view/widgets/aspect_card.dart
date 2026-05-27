@@ -12,58 +12,67 @@ class AspectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        CupertinoPageRoute(
-            builder: (_) => AspectScreen(aspect: aspect, color: color)),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.outlineVariant),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 42,
-              height: 42,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
+    void navigate() => Navigator.of(context).push(
+          CupertinoPageRoute(
+              builder: (_) => AspectScreen(aspect: aspect, color: color)),
+        );
+    return Semantics(
+      label: 'Open ${aspect.title}',
+      button: true,
+      excludeSemantics: true,
+      onTap: navigate,
+      child: GestureDetector(
+        onTap: navigate,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceContainerLowest,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.outlineVariant),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:
+                    Icon(aspectIcon(aspect.iconKey), size: 20, color: color),
               ),
-              child: Icon(aspectIcon(aspect.iconKey), size: 20, color: color),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          aspect.title,
-                          style: Theme.of(context).textTheme.titleSmall,
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            aspect.title,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      _ActivityTag(label: aspect.activityLabel, color: color),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    aspect.description,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
+                        const SizedBox(width: 8),
+                        _ActivityTag(
+                            label: aspect.activityLabel, color: color),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      aspect.description,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(CupertinoIcons.chevron_right,
-                size: 14, color: AppColors.onSurfaceVariant),
-          ],
+              const SizedBox(width: 8),
+              const Icon(CupertinoIcons.chevron_right,
+                  size: 14, color: AppColors.onSurfaceVariant),
+            ],
+          ),
         ),
       ),
     );

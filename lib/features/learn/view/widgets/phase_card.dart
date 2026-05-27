@@ -10,11 +10,14 @@ class PhaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void navigate() => _navigateToPhase(context, phase);
     return Semantics(
       label: 'Open ${phase.title}',
       button: true,
+      excludeSemantics: true,
+      onTap: navigate,
       child: GestureDetector(
-        onTap: () => _navigateToPhase(context, phase),
+        onTap: navigate,
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.surfaceContainerLowest,

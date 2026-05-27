@@ -10,15 +10,18 @@ class ContinueCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: 'Continue ${phase.title}',
-      button: true,
-      child: GestureDetector(
-        onTap: () => Navigator.of(context).push(
+    void navigate() => Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (_) => PhaseScreen(phase: phase),
           ),
-        ),
+        );
+    return Semantics(
+      label: 'Continue ${phase.title}',
+      button: true,
+      excludeSemantics: true,
+      onTap: navigate,
+      child: GestureDetector(
+        onTap: navigate,
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
