@@ -168,13 +168,14 @@ void main() {
       );
 
       final node = tester.getSemantics(find.byType(AspectCard));
+      final data = node.getSemanticsData();
       expect(
         node,
-        containsSemantics(isButton: true, hasTapAction: true),
+        isSemantics(isButton: true, hasTapAction: true),
       );
-      expect(node, containsSemantics(label: aspect.title));
-      expect(node, containsSemantics(label: aspect.activityLabel));
-      expect(node, containsSemantics(label: aspect.description));
+      expect(data.label, contains(aspect.title));
+      expect(data.label, contains(aspect.activityLabel));
+      expect(data.label, contains(aspect.description));
 
       handle.dispose();
     });

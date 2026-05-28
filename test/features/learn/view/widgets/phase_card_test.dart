@@ -103,12 +103,13 @@ void main() {
       await tester.pumpWidget(_wrap(PhaseCard(phase: phase)));
 
       final node = tester.getSemantics(find.byType(PhaseCard));
+      final data = node.getSemanticsData();
       expect(
         node,
-        containsSemantics(isButton: true, hasTapAction: true),
+        isSemantics(isButton: true, hasTapAction: true),
       );
-      expect(node, containsSemantics(label: phase.title));
-      expect(node, containsSemantics(label: phase.description));
+      expect(data.label, contains(phase.title));
+      expect(data.label, contains(phase.description));
 
       handle.dispose();
     });
