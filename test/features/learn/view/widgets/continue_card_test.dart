@@ -71,7 +71,8 @@ void main() {
       );
     });
 
-    testWidgets('Semantics node exposes "Continue <title>" with button: true',
+    testWidgets(
+        'Semantics node exposes "Continue <title>" label with description as hint and button: true',
         (tester) async {
       final handle = tester.ensureSemantics();
       final phase = _phase(id: 3);
@@ -81,6 +82,7 @@ void main() {
         tester.getSemantics(find.byType(ContinueCard)),
         matchesSemantics(
           label: 'Continue ${phase.title}',
+          hint: phase.description,
           isButton: true,
           hasTapAction: true,
         ),

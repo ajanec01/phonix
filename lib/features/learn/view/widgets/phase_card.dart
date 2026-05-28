@@ -12,9 +12,8 @@ class PhaseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     void navigate() => _navigateToPhase(context, phase);
     return Semantics(
-      label: 'Open ${phase.title}',
       button: true,
-      excludeSemantics: true,
+      container: true,
       onTap: navigate,
       child: GestureDetector(
         onTap: navigate,

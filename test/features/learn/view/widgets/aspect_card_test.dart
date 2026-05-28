@@ -154,22 +154,27 @@ void main() {
       expect(screen.color, equals(color));
     });
 
-    testWidgets('Semantics node exposes "Open <title>" with button: true',
+    testWidgets(
+        'Semantics node is a button with a tap action and merges title, activity label, and description',
         (tester) async {
       final handle = tester.ensureSemantics();
-      final aspect = _aspect(title: 'Rhyming Games');
+      final aspect = _aspect(
+        title: 'Rhyming Games',
+        description: 'Play with rhymes.',
+        activityLabel: 'Game',
+      );
       await tester.pumpWidget(
         _wrap(AspectCard(aspect: aspect, color: AppColors.phase1)),
       );
 
+      final node = tester.getSemantics(find.byType(AspectCard));
       expect(
-        tester.getSemantics(find.byType(AspectCard)),
-        matchesSemantics(
-          label: 'Open ${aspect.title}',
-          isButton: true,
-          hasTapAction: true,
-        ),
+        node,
+        containsSemantics(isButton: true, hasTapAction: true),
       );
+      expect(node, containsSemantics(label: aspect.title));
+      expect(node, containsSemantics(label: aspect.activityLabel));
+      expect(node, containsSemantics(label: aspect.description));
 
       handle.dispose();
     });

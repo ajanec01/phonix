@@ -95,20 +95,20 @@ void main() {
       expect((built as PhaseScreen).phase, same(phase));
     });
 
-    testWidgets('Semantics node exposes "Open <title>" with button: true',
+    testWidgets(
+        'Semantics node is a button with a tap action and merges title and description',
         (tester) async {
       final handle = tester.ensureSemantics();
       final phase = _phase(3);
       await tester.pumpWidget(_wrap(PhaseCard(phase: phase)));
 
+      final node = tester.getSemantics(find.byType(PhaseCard));
       expect(
-        tester.getSemantics(find.byType(PhaseCard)),
-        matchesSemantics(
-          label: 'Open ${phase.title}',
-          isButton: true,
-          hasTapAction: true,
-        ),
+        node,
+        containsSemantics(isButton: true, hasTapAction: true),
       );
+      expect(node, containsSemantics(label: phase.title));
+      expect(node, containsSemantics(label: phase.description));
 
       handle.dispose();
     });

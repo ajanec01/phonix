@@ -17,6 +17,7 @@ class ContinueCard extends StatelessWidget {
         );
     return Semantics(
       label: 'Continue ${phase.title}',
+      hint: phase.description,
       button: true,
       excludeSemantics: true,
       onTap: navigate,

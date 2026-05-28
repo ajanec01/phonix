@@ -17,9 +17,8 @@ class AspectCard extends StatelessWidget {
               builder: (_) => AspectScreen(aspect: aspect, color: color)),
         );
     return Semantics(
-      label: 'Open ${aspect.title}',
       button: true,
-      excludeSemantics: true,
+      container: true,
       onTap: navigate,
       child: GestureDetector(
         onTap: navigate,
