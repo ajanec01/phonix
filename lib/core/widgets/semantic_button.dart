@@ -40,13 +40,14 @@ class _SemanticButtonState extends State<SemanticButton> {
 
   @override
   Widget build(BuildContext context) {
-    final hasLabel = widget.semanticLabel != null &&
-        widget.semanticLabel!.isNotEmpty;
+    final hasLabel =
+        widget.semanticLabel != null && widget.semanticLabel!.isNotEmpty;
     final outlineColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
         : Colors.black;
 
     return Semantics(
+      container: true,
       button: true,
       label: hasLabel ? widget.semanticLabel : null,
       hint: widget.semanticHint,
