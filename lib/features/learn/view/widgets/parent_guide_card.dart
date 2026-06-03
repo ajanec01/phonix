@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/semantic_button.dart';
 import '../../../../theme/app_colors.dart';
 
 class ParentGuideCard extends StatelessWidget {
@@ -31,40 +32,37 @@ class ParentGuideCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Semantics(
-              label: expanded
+            SemanticButton(
+              focusNode: headerFocusNode,
+              onPressed: onToggle,
+              borderRadius: BorderRadius.circular(14),
+              semanticLabel: expanded
                   ? 'Collapse For Parents'
                   : 'Expand For Parents',
-              button: true,
-              child: InkWell(
-                focusNode: headerFocusNode,
-                onTap: onToggle,
-                borderRadius: BorderRadius.circular(14),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
-                  child: Row(
-                    children: [
-                      const Icon(CupertinoIcons.person_fill,
-                          size: 16, color: color),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'For Parents',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    color: color,
-                                  ),
-                        ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+                child: Row(
+                  children: [
+                    const Icon(CupertinoIcons.person_fill,
+                        size: 16, color: color),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'For Parents',
+                        style:
+                            Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  color: color,
+                                ),
                       ),
-                      Icon(
-                        expanded
-                            ? CupertinoIcons.chevron_up
-                            : CupertinoIcons.chevron_down,
-                        size: 14,
-                        color: color,
-                      ),
-                    ],
-                  ),
+                    ),
+                    Icon(
+                      expanded
+                          ? CupertinoIcons.chevron_up
+                          : CupertinoIcons.chevron_down,
+                      size: 14,
+                      color: color,
+                    ),
+                  ],
                 ),
               ),
             ),

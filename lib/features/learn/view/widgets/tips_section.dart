@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/semantic_button.dart';
 import 'bullet_list.dart';
 
 class TipsSection extends StatefulWidget {
@@ -27,45 +28,32 @@ class TipsSectionState extends State<TipsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(
-          label: _expanded ? 'Collapse tips for home' : 'Expand tips for home',
-          button: true,
-          child: Actions(
-            actions: {
-              ActivateIntent: CallbackAction<ActivateIntent>(
-                onInvoke: (_) {
-                  _toggle();
-                  return null;
-                },
-              ),
-            },
-            child: Focus(
-              focusNode: widget.focusNode,
-              child: GestureDetector(
-                onTap: _toggle,
-                child: Row(
-                  children: [
-                    Icon(CupertinoIcons.lightbulb,
-                        size: 15, color: widget.color),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Tips for home',
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: widget.color,
-                          ),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(
-                      _expanded
-                          ? CupertinoIcons.chevron_up
-                          : CupertinoIcons.chevron_down,
-                      size: 12,
+        SemanticButton(
+          focusNode: widget.focusNode,
+          onPressed: _toggle,
+          borderRadius: BorderRadius.circular(6),
+          semanticLabel:
+              _expanded ? 'Collapse tips for home' : 'Expand tips for home',
+          child: Row(
+            children: [
+              Icon(CupertinoIcons.lightbulb,
+                  size: 15, color: widget.color),
+              const SizedBox(width: 6),
+              Text(
+                'Tips for home',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: widget.color,
                     ),
-                  ],
-                ),
               ),
-            ),
+              const SizedBox(width: 4),
+              Icon(
+                _expanded
+                    ? CupertinoIcons.chevron_up
+                    : CupertinoIcons.chevron_down,
+                size: 12,
+                color: widget.color,
+              ),
+            ],
           ),
         ),
         if (_expanded) ...[

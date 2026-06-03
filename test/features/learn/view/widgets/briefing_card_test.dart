@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:phonix/core/widgets/semantic_button.dart';
 import 'package:phonix/features/learn/domain/model/phase.dart';
 import 'package:phonix/features/learn/view/widgets/briefing_card.dart';
 import 'package:phonix/features/learn/view/widgets/tips_section.dart';
@@ -137,7 +138,7 @@ void main() {
         ),
       );
 
-      final node = tester.getSemantics(find.byType(InkWell).first);
+      final node = tester.getSemantics(find.byType(SemanticButton).first);
       expect(node, isSemantics(isButton: true));
       expect(node.getSemanticsData().label, contains('Expand About Phase One'));
       expect(
@@ -161,7 +162,7 @@ void main() {
         ),
       );
 
-      final node = tester.getSemantics(find.byType(InkWell).first);
+      final node = tester.getSemantics(find.byType(SemanticButton).first);
       expect(node, isSemantics(isButton: true));
       expect(
         node.getSemanticsData().label,
@@ -187,7 +188,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.byType(InkWell).first);
+      await tester.tap(find.byType(SemanticButton).first);
       expect(taps, 1);
     });
 
@@ -271,7 +272,7 @@ void main() {
       await tester.pump();
 
       String label() => tester
-          .getSemantics(find.byType(InkWell).first)
+          .getSemantics(find.byType(SemanticButton).first)
           .getSemanticsData()
           .label;
 

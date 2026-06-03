@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:phonix/core/widgets/semantic_button.dart';
 import 'package:phonix/features/learn/view/widgets/bullet_list.dart';
 import 'package:phonix/features/learn/view/widgets/tips_section.dart';
 import 'package:phonix/theme/app_colors.dart';
@@ -110,7 +111,7 @@ void main() {
         ),
       );
 
-      final node = tester.getSemantics(find.byType(GestureDetector));
+      final node = tester.getSemantics(find.byType(SemanticButton));
       expect(node, isSemantics(isButton: true));
       expect(
         node.getSemanticsData().label,
@@ -139,7 +140,7 @@ void main() {
       await tester.tap(find.text('Tips for home'));
       await tester.pump();
 
-      final node = tester.getSemantics(find.byType(GestureDetector));
+      final node = tester.getSemantics(find.byType(SemanticButton));
       expect(node, isSemantics(isButton: true));
       expect(
         node.getSemanticsData().label,
@@ -230,7 +231,7 @@ void main() {
       await tester.pump();
 
       String label() => tester
-          .getSemantics(find.byType(GestureDetector))
+          .getSemantics(find.byType(SemanticButton))
           .getSemanticsData()
           .label;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/semantic_button.dart';
 import '../../../../theme/app_colors.dart';
 import '../../domain/model/phase.dart';
 import 'bullet_list.dart';
@@ -21,6 +22,7 @@ class BriefingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = AppColors.phases[phase.id - 1];
+    final headerRadius = BorderRadius.circular(14);
 
     return AnimatedSize(
       duration: const Duration(milliseconds: 250),
@@ -35,40 +37,37 @@ class BriefingCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Semantics(
-              label: expanded
+            SemanticButton(
+              focusNode: headerFocusNode,
+              onPressed: onToggle,
+              borderRadius: headerRadius,
+              semanticLabel: expanded
                   ? 'Collapse About ${phase.title}'
                   : 'Expand About ${phase.title}',
-              button: true,
-              child: InkWell(
-                focusNode: headerFocusNode,
-                onTap: onToggle,
-                borderRadius: BorderRadius.circular(14),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
-                  child: Row(
-                    children: [
-                      Icon(CupertinoIcons.info_circle_fill,
-                          size: 18, color: color),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'About ${phase.title}',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    color: color,
-                                  ),
-                        ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+                child: Row(
+                  children: [
+                    Icon(CupertinoIcons.info_circle_fill,
+                        size: 18, color: color),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'About ${phase.title}',
+                        style:
+                            Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  color: color,
+                                ),
                       ),
-                      Icon(
-                        expanded
-                            ? CupertinoIcons.chevron_up
-                            : CupertinoIcons.chevron_down,
-                        size: 14,
-                        color: color,
-                      ),
-                    ],
-                  ),
+                    ),
+                    Icon(
+                      expanded
+                          ? CupertinoIcons.chevron_up
+                          : CupertinoIcons.chevron_down,
+                      size: 14,
+                      color: color,
+                    ),
+                  ],
                 ),
               ),
             ),
