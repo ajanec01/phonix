@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/semantic_button.dart';
 import '../../../../theme/app_colors.dart';
 import '../../domain/model/phase.dart';
 import '../screens/phase_screen.dart';
@@ -10,59 +11,52 @@ class PhaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void navigate() => _navigateToPhase(context, phase);
-    return Semantics(
-      button: true,
-      container: true,
-      onTap: navigate,
-      child: GestureDetector(
-        onTap: navigate,
-        excludeFromSemantics: true,
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.surfaceContainerLowest,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.outlineVariant),
-          ),
-          clipBehavior: Clip.hardEdge,
-          child: IntrinsicHeight(
-            child: Row(
-              children: [
-                Container(width: 4, color: AppColors.phases[phase.id - 1]),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                phase.title,
-                                style:
-                                    Theme.of(context).textTheme.titleSmall,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                phase.description,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
+    return SemanticButton(
+      onPressed: () => _navigateToPhase(context, phase),
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.outlineVariant),
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              Container(width: 4, color: AppColors.phases[phase.id - 1]),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              phase.title,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              phase.description,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        const Icon(
-                          CupertinoIcons.chevron_right,
-                          size: 16,
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Icon(
+                        CupertinoIcons.chevron_right,
+                        size: 16,
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

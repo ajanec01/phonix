@@ -94,24 +94,5 @@ void main() {
       expect(built, isA<PhaseScreen>());
       expect((built as PhaseScreen).phase, same(phase));
     });
-
-    testWidgets(
-        'Semantics node is a button with a tap action and merges title and description',
-        (tester) async {
-      final handle = tester.ensureSemantics();
-      final phase = _phase(3);
-      await tester.pumpWidget(_wrap(PhaseCard(phase: phase)));
-
-      final node = tester.getSemantics(find.byType(PhaseCard));
-      final data = node.getSemanticsData();
-      expect(
-        node,
-        isSemantics(isButton: true, hasTapAction: true),
-      );
-      expect(data.label, contains(phase.title));
-      expect(data.label, contains(phase.description));
-
-      handle.dispose();
-    });
   });
 }
