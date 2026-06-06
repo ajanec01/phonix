@@ -34,6 +34,12 @@ Widget _wrap(Widget child, {NavigatorObserver? observer}) => MaterialApp(
       ),
     );
 
+Container _stripeContainer(WidgetTester tester) => tester.widget<Container>(
+      find.byWidgetPredicate(
+        (w) => w is Container && w.constraints?.maxWidth == 4,
+      ),
+    );
+
 void main() {
   group('PhaseCard', () {
     testWidgets('renders phase title and description', (tester) async {
@@ -42,38 +48,6 @@ void main() {
 
       expect(find.text(phase.title), findsOneWidget);
       expect(find.text(phase.description), findsOneWidget);
-    });
-
-    testWidgets('left border uses AppColors.phases[phase.id - 1] for phase 1',
-        (tester) async {
-      final phase = _phase(1);
-      await tester.pumpWidget(_wrap(PhaseCard(phase: phase)));
-
-      expect(
-        find.byWidgetPredicate(
-          (w) =>
-              w is Container &&
-              w.color == AppColors.phases[0] &&
-              w.constraints?.maxWidth == 4,
-        ),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('left border uses AppColors.phases[phase.id - 1] for phase 4',
-        (tester) async {
-      final phase = _phase(4);
-      await tester.pumpWidget(_wrap(PhaseCard(phase: phase)));
-
-      expect(
-        find.byWidgetPredicate(
-          (w) =>
-              w is Container &&
-              w.color == AppColors.phases[3] &&
-              w.constraints?.maxWidth == 4,
-        ),
-        findsOneWidget,
-      );
     });
 
     testWidgets('tapping pushes a CupertinoPageRoute to PhaseScreen',
@@ -93,6 +67,44 @@ void main() {
       final built = cupertinoRoutes.single.builder(context);
       expect(built, isA<PhaseScreen>());
       expect((built as PhaseScreen).phase, same(phase));
+    });
+
+    group('Option A stripe colour rule', () {
+      // Phases 1–3: original phaseN falls below 3:1 → use phaseNOnLight.
+      // Phases 4–6: original phaseN already clears 3:1 → keep phaseN.
+
+      testWidgets('phase 1 stripe uses phase1OnLight', (tester) async {
+        await tester.pumpWidget(_wrap(PhaseCard(phase: _phase(1))));
+        expect(_stripeContainer(tester).color, AppColors.phase1OnLight);
+      });
+
+      testWidgets('phase 2 stripe uses phase2OnLight', (tester) async {
+        await tester.pumpWidget(_wrap(PhaseCard(phase: _phase(2))));
+        expect(_stripeContainer(tester).color, AppColors.phase2OnLight);
+      });
+
+      testWidgets('phase 3 stripe uses phase3OnLight', (tester) async {
+        await tester.pumpWidget(_wrap(PhaseCard(phase: _phase(3))));
+        expect(_stripeContainer(tester).color, AppColors.phase3OnLight);
+      });
+
+      testWidgets('phase 4 stripe uses original phase4 (already clears 3:1)',
+          (tester) async {
+        await tester.pumpWidget(_wrap(PhaseCard(phase: _phase(4))));
+        expect(_stripeContainer(tester).color, AppColors.phase4);
+      });
+
+      testWidgets('phase 5 stripe uses original phase5 (already clears 3:1)',
+          (tester) async {
+        await tester.pumpWidget(_wrap(PhaseCard(phase: _phase(5))));
+        expect(_stripeContainer(tester).color, AppColors.phase5);
+      });
+
+      testWidgets('phase 6 stripe uses original phase6 (already clears 3:1)',
+          (tester) async {
+        await tester.pumpWidget(_wrap(PhaseCard(phase: _phase(6))));
+        expect(_stripeContainer(tester).color, AppColors.phase6);
+      });
     });
   });
 }

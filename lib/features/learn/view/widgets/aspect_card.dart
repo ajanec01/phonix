@@ -6,15 +6,26 @@ import '../screens/aspect_screen.dart';
 import 'aspect_icons.dart';
 
 class AspectCard extends StatelessWidget {
-  const AspectCard({super.key, required this.aspect, required this.color});
+  const AspectCard({
+    super.key,
+    required this.aspect,
+    required this.color,
+    required this.foregroundColor,
+  });
   final Aspect aspect;
   final Color color;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
     void navigate() => Navigator.of(context).push(
           CupertinoPageRoute(
-              builder: (_) => AspectScreen(aspect: aspect, color: color)),
+            builder: (_) => AspectScreen(
+              aspect: aspect,
+              color: color,
+              foregroundColor: foregroundColor,
+            ),
+          ),
         );
     return Semantics(
       button: true,
@@ -40,7 +51,7 @@ class AspectCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(aspectIcon(aspect.iconKey),
-                    size: 20, color: color),
+                    size: 20, color: foregroundColor),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -57,7 +68,10 @@ class AspectCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         _ActivityTag(
-                            label: aspect.activityLabel, color: color),
+                          label: aspect.activityLabel,
+                          color: color,
+                          foregroundColor: foregroundColor,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -80,9 +94,14 @@ class AspectCard extends StatelessWidget {
 }
 
 class _ActivityTag extends StatelessWidget {
-  const _ActivityTag({required this.label, required this.color});
+  const _ActivityTag({
+    required this.label,
+    required this.color,
+    required this.foregroundColor,
+  });
   final String label;
   final Color color;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +114,7 @@ class _ActivityTag extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: color,
+              color: foregroundColor,
               fontWeight: FontWeight.w700,
             ),
       ),

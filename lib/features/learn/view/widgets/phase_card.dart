@@ -24,7 +24,7 @@ class PhaseCard extends StatelessWidget {
         child: IntrinsicHeight(
           child: Row(
             children: [
-              Container(width: 4, color: AppColors.phases[phase.id - 1]),
+              Container(width: 4, color: _stripeColor(phase.id)),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
@@ -63,6 +63,12 @@ class PhaseCard extends StatelessWidget {
     );
   }
 }
+
+// Option A stripe rule: only phases 1–3 fall below the 3:1 UI-component
+// threshold with the original phaseN token, so they take the darker companion.
+// phases 4–6 keep the original phaseN — both already clear 3:1 on white.
+Color _stripeColor(int phaseId) =>
+    phaseId <= 3 ? AppColors.phasesOnLight[phaseId - 1] : AppColors.phases[phaseId - 1];
 
 void _navigateToPhase(BuildContext context, Phase phase) {
   Navigator.of(context).push(

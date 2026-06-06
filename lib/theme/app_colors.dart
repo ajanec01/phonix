@@ -53,4 +53,25 @@ abstract final class AppColors {
     phase5,
     phase6,
   ];
+
+  // Foreground-only companions for phase accents on light surfaces. The
+  // existing phase1–phase6 values remain WCAG-compliant for background fills
+  // but fall below 4.5:1 as foreground text/icon colours; these darker hues
+  // clear ≥4.5:1 against the most-demanding rendered surface (8% phase-colour
+  // composited on #F2F2F7). phase4 already clears the threshold and reuses
+  // its background value as foreground.
+  static const phase1OnLight = Color(0xFFA95400);
+  static const phase2OnLight = Color(0xFFC03A00);
+  static const phase3OnLight = Color(0xFF007D0A);
+  static const phase5OnLight = Color(0xFFA034C7);
+  static const phase6OnLight = Color(0xFFD10038);
+
+  static const List<Color> phasesOnLight = [
+    phase1OnLight,
+    phase2OnLight,
+    phase3OnLight,
+    phase4,
+    phase5OnLight,
+    phase6OnLight,
+  ];
 }
