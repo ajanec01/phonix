@@ -24,7 +24,10 @@ class PhaseCard extends StatelessWidget {
         child: IntrinsicHeight(
           child: Row(
             children: [
-              Container(width: 4, color: AppColors.phases[phase.id - 1]),
+              Container(
+                width: 4,
+                color: AppColors.phasesOnLight[phase.id - 1],
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),

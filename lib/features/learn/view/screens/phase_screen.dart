@@ -26,6 +26,8 @@ class _PhaseScreenState extends State<PhaseScreen> {
   late final AspectViewModel _viewModel;
 
   Color get _phaseColor => AppColors.phases[widget.phase.id - 1];
+  Color get _phaseForegroundColor =>
+      AppColors.phasesOnLight[widget.phase.id - 1];
 
   @override
   void initState() {
@@ -76,12 +78,16 @@ class _PhaseScreenState extends State<PhaseScreen> {
               listenable: _viewModel,
               builder: (context, _) {
                 final color = _phaseColor;
+                final foregroundColor = _phaseForegroundColor;
                 return switch (_viewModel.state) {
                   AspectStateLoading() => _AspectsLoading(),
                   AspectStateLoaded(:final aspects) when aspects.isEmpty =>
                     const SizedBox.shrink(),
-                  AspectStateLoaded(:final aspects) =>
-                    _AspectsList(aspects: aspects, color: color),
+                  AspectStateLoaded(:final aspects) => _AspectsList(
+                      aspects: aspects,
+                      color: color,
+                      foregroundColor: foregroundColor,
+                    ),
                   AspectStateError() => const SizedBox.shrink(),
                 };
               },
@@ -125,9 +131,14 @@ class _AspectsLoading extends StatelessWidget {
 }
 
 class _AspectsList extends StatelessWidget {
-  const _AspectsList({required this.aspects, required this.color});
+  const _AspectsList({
+    required this.aspects,
+    required this.color,
+    required this.foregroundColor,
+  });
   final List<Aspect> aspects;
   final Color color;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +151,11 @@ class _AspectsList extends StatelessWidget {
           const SizedBox(height: 12),
           for (int i = 0; i < aspects.length; i++) ...[
             if (i > 0) const SizedBox(height: 10),
-            AspectCard(aspect: aspects[i], color: color),
+            AspectCard(
+              aspect: aspects[i],
+              color: color,
+              foregroundColor: foregroundColor,
+            ),
           ],
         ],
       ),
