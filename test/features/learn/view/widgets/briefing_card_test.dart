@@ -314,5 +314,101 @@ void main() {
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.color, AppColors.phases[0].withValues(alpha: 0.08));
     });
+
+    group('foreground colour uses phaseNOnLight, not phaseN', () {
+      // Option C: every phase has an alternative-hue phaseNOnLight token
+      // (hue shifted within ±30° of original), including phase4 — every
+      // foreground reference must use the new token.
+      for (final id in [1, 2, 3, 4, 5, 6]) {
+        testWidgets(
+            'phase $id header icon, heading, and chevron all use AppColors.phasesOnLight[\$id-1]',
+            (tester) async {
+          await tester.pumpWidget(
+            _wrap(
+              BriefingCard(
+                phase: _phase(id: id, title: 'Phase $id'),
+                expanded: true,
+                onToggle: () {},
+              ),
+            ),
+          );
+
+          final expectedFg = AppColors.phasesOnLight[id - 1];
+
+          // Info-circle icon
+          final infoIcon = tester.widget<Icon>(
+            find.descendant(
+              of: find.byType(BriefingCard),
+              matching: find.byIcon(CupertinoIcons.info_circle_fill),
+            ),
+          );
+          expect(infoIcon.color, equals(expectedFg),
+              reason: 'phase $id info icon should use phaseNOnLight');
+
+          // Heading text
+          final heading = tester.widget<Text>(find.text('About Phase $id'));
+          expect(heading.style?.color, equals(expectedFg),
+              reason: 'phase $id heading should use phaseNOnLight');
+
+          // Chevron (expanded -> chevron_up)
+          final chevron = tester.widget<Icon>(
+            find.descendant(
+              of: find.byType(BriefingCard),
+              matching: find.byIcon(CupertinoIcons.chevron_up),
+            ),
+          );
+          expect(chevron.color, equals(expectedFg),
+              reason: 'phase $id chevron should use phaseNOnLight');
+        });
+      }
+
+      testWidgets('each phase heading uses the correct AppColors token',
+          (tester) async {
+        for (final entry in <int, Color>{
+          1: AppColors.phase1OnLight,
+          2: AppColors.phase2OnLight,
+          3: AppColors.phase3OnLight,
+          4: AppColors.phase4OnLight,
+          5: AppColors.phase5OnLight,
+          6: AppColors.phase6OnLight,
+        }.entries) {
+          await tester.pumpWidget(
+            _wrap(
+              BriefingCard(
+                phase: _phase(id: entry.key, title: 'Phase ${entry.key}'),
+                expanded: false,
+                onToggle: () {},
+              ),
+            ),
+          );
+          final heading = tester.widget<Text>(
+            find.text('About Phase ${entry.key}'),
+          );
+          expect(heading.style?.color, equals(entry.value),
+              reason:
+                  'phase ${entry.key} heading must use the corresponding OnLight token');
+        }
+      });
+
+      testWidgets(
+          'TipsSection inside BriefingCard receives the phaseNOnLight colour',
+          (tester) async {
+        for (final id in [1, 2, 3, 4, 5, 6]) {
+          await tester.pumpWidget(
+            _wrap(
+              BriefingCard(
+                phase: _phase(id: id, title: 'Phase $id'),
+                expanded: true,
+                onToggle: () {},
+              ),
+            ),
+          );
+          final tips = tester.widget<TipsSection>(find.byType(TipsSection));
+          expect(tips.color, equals(AppColors.phasesOnLight[id - 1]),
+              reason:
+                  'phase $id TipsSection should receive phaseNOnLight as its color');
+        }
+      });
+    });
   });
 }

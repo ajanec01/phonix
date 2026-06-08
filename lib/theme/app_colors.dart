@@ -53,4 +53,27 @@ abstract final class AppColors {
     phase5,
     phase6,
   ];
+
+  // Foreground-only companions for phase accents on light surfaces (Option C —
+  // alternative hues). Each token shifts the original CIELCH hue by up to ±30°
+  // to a different colour family while keeping it perceptually related, clears
+  // ≥4.5:1 contrast on every actual rendered surface in the Learn feature
+  // (pure #FFFFFF, pure #F2F2F7, and the 8% / 10% / 12% alpha-blended tinted
+  // backgrounds described in issue #25), and maintains a minimum pairwise
+  // ΔE2000 ≥ 20 across all six tokens so every phase stays mutually distinct.
+  static const phase1OnLight = Color(0xFF776B00); // olive (orig orange)
+  static const phase2OnLight = Color(0xFFB04800); // burnt orange (orig deep orange)
+  static const phase3OnLight = Color(0xFF007660); // teal (orig green)
+  static const phase4OnLight = Color(0xFF0069AD); // blue (orig indigo)
+  static const phase5OnLight = Color(0xFF8917FF); // violet (orig purple)
+  static const phase6OnLight = Color(0xFFC9005A); // magenta (orig pink)
+
+  static const List<Color> phasesOnLight = [
+    phase1OnLight,
+    phase2OnLight,
+    phase3OnLight,
+    phase4OnLight,
+    phase5OnLight,
+    phase6OnLight,
+  ];
 }
