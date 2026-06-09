@@ -53,4 +53,27 @@ abstract final class AppColors {
     phase5,
     phase6,
   ];
+
+  // Foreground-only companions for phase accents on light surfaces. Derived by
+  // applying a uniform L* offset in CIELCH (D65) to every original phase hue,
+  // including phase4. Issue #25 named −25 L* as the target offset; in-gamut
+  // sRGB conversion at the boundary leaves phase1 (4.29:1) and phase3 (4.23:1)
+  // below the 4.5:1 floor on the 8% phase-on-#F2F2F7 surface, so the actual
+  // uniform offset applied is −28 L* — the smallest integer uniform shift that
+  // clears every threshold across all six phases on every rendered surface.
+  static const phase1OnLight = Color(0xFFA74E00);
+  static const phase2OnLight = Color(0xFFA51A00);
+  static const phase3OnLight = Color(0xFF007A0E);
+  static const phase4OnLight = Color(0xFF001889);
+  static const phase5OnLight = Color(0xFF600090);
+  static const phase6OnLight = Color(0xFFA40019);
+
+  static const List<Color> phasesOnLight = [
+    phase1OnLight,
+    phase2OnLight,
+    phase3OnLight,
+    phase4OnLight,
+    phase5OnLight,
+    phase6OnLight,
+  ];
 }

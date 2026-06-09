@@ -34,6 +34,12 @@ Widget _wrap(Widget child, {NavigatorObserver? observer}) => MaterialApp(
       ),
     );
 
+Container _stripeContainer(WidgetTester tester) => tester.widget<Container>(
+      find.byWidgetPredicate(
+        (w) => w is Container && w.constraints?.maxWidth == 4,
+      ),
+    );
+
 void main() {
   group('PhaseCard', () {
     testWidgets('renders phase title and description', (tester) async {
@@ -42,38 +48,6 @@ void main() {
 
       expect(find.text(phase.title), findsOneWidget);
       expect(find.text(phase.description), findsOneWidget);
-    });
-
-    testWidgets('left border uses AppColors.phases[phase.id - 1] for phase 1',
-        (tester) async {
-      final phase = _phase(1);
-      await tester.pumpWidget(_wrap(PhaseCard(phase: phase)));
-
-      expect(
-        find.byWidgetPredicate(
-          (w) =>
-              w is Container &&
-              w.color == AppColors.phases[0] &&
-              w.constraints?.maxWidth == 4,
-        ),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('left border uses AppColors.phases[phase.id - 1] for phase 4',
-        (tester) async {
-      final phase = _phase(4);
-      await tester.pumpWidget(_wrap(PhaseCard(phase: phase)));
-
-      expect(
-        find.byWidgetPredicate(
-          (w) =>
-              w is Container &&
-              w.color == AppColors.phases[3] &&
-              w.constraints?.maxWidth == 4,
-        ),
-        findsOneWidget,
-      );
     });
 
     testWidgets('tapping pushes a CupertinoPageRoute to PhaseScreen',
@@ -93,6 +67,24 @@ void main() {
       final built = cupertinoRoutes.single.builder(context);
       expect(built, isA<PhaseScreen>());
       expect((built as PhaseScreen).phase, same(phase));
+    });
+
+    group('Option B stripe colour rule', () {
+      // All six phases use phaseNOnLight for the 4px decorative stripe — the
+      // uniform-token rule applies to every phase regardless of whether the
+      // original cleared 3:1.
+
+      for (final id in [1, 2, 3, 4, 5, 6]) {
+        testWidgets('phase $id stripe uses phase${id}OnLight', (tester) async {
+          await tester.pumpWidget(_wrap(PhaseCard(phase: _phase(id))));
+          expect(
+            _stripeContainer(tester).color,
+            equals(AppColors.phasesOnLight[id - 1]),
+            reason:
+                'phase $id stripe must use phaseNOnLight under Option B (uniform rule)',
+          );
+        });
+      }
     });
   });
 }

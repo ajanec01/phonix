@@ -5,9 +5,15 @@ import '../widgets/aspect_icons.dart';
 import '../widgets/parent_guide_card.dart';
 
 class AspectScreen extends StatefulWidget {
-  const AspectScreen({super.key, required this.aspect, required this.color});
+  const AspectScreen({
+    super.key,
+    required this.aspect,
+    required this.color,
+    required this.foregroundColor,
+  });
   final Aspect aspect;
   final Color color;
+  final Color foregroundColor;
 
   @override
   State<AspectScreen> createState() => _AspectScreenState();
@@ -20,6 +26,7 @@ class _AspectScreenState extends State<AspectScreen> {
   Widget build(BuildContext context) {
     final aspect = widget.aspect;
     final color = widget.color;
+    final foregroundColor = widget.foregroundColor;
 
     return Scaffold(
       backgroundColor: AppColors.surfaceContainerLow,
@@ -54,14 +61,18 @@ class _AspectScreenState extends State<AspectScreen> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Icon(aspectIcon(aspect.iconKey),
-                              size: 26, color: color),
+                              size: 26, color: foregroundColor),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _ActivityTag(label: aspect.activityLabel, color: color),
+                              _ActivityTag(
+                                label: aspect.activityLabel,
+                                color: color,
+                                foregroundColor: foregroundColor,
+                              ),
                               const SizedBox(height: 8),
                               Text(
                                 aspect.description,
@@ -79,7 +90,8 @@ class _AspectScreenState extends State<AspectScreen> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 12),
-                  _ActivityPlaceholder(aspect: aspect, color: color),
+                  _ActivityPlaceholder(
+                      aspect: aspect, foregroundColor: foregroundColor),
                   const SizedBox(height: 24),
                   ParentGuideCard(
                     guide: aspect.parentGuide,
@@ -98,9 +110,10 @@ class _AspectScreenState extends State<AspectScreen> {
 }
 
 class _ActivityPlaceholder extends StatelessWidget {
-  const _ActivityPlaceholder({required this.aspect, required this.color});
+  const _ActivityPlaceholder(
+      {required this.aspect, required this.foregroundColor});
   final Aspect aspect;
-  final Color color;
+  final Color foregroundColor;
 
   static const _descriptions = {
     1: 'Listen to sounds and identify where they come from.',
@@ -124,7 +137,7 @@ class _ActivityPlaceholder extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(aspectIcon(aspect.iconKey), size: 48, color: color),
+          Icon(aspectIcon(aspect.iconKey), size: 48, color: foregroundColor),
           const SizedBox(height: 16),
           Text(
             _descriptions[aspect.number] ?? aspect.description,
@@ -145,9 +158,14 @@ class _ActivityPlaceholder extends StatelessWidget {
 }
 
 class _ActivityTag extends StatelessWidget {
-  const _ActivityTag({required this.label, required this.color});
+  const _ActivityTag({
+    required this.label,
+    required this.color,
+    required this.foregroundColor,
+  });
   final String label;
   final Color color;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +178,7 @@ class _ActivityTag extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: color,
+              color: foregroundColor,
               fontWeight: FontWeight.w700,
             ),
       ),
