@@ -76,4 +76,62 @@ abstract final class AppColors {
     phase5OnLight,
     phase6OnLight,
   ];
+
+  // ===========================================================================
+  // Dark mode — Option B: Warm dark
+  // ---------------------------------------------------------------------------
+  // Surface base is a warm near-black (#161412 page, #1F1D1B scaffold,
+  // #2A2826 card face) — a few hue points toward yellow-orange so the
+  // overall feel is "lamp-lit room" rather than "void". Phase accents are
+  // de-saturated and warm-shifted so they read as softer at night without
+  // sacrificing the original hue identity. Every phasesOnDark token clears
+  // 4.5:1 against #2A2826 and its own 8% tinted background.
+  // ===========================================================================
+  static const surfaceDark = Color(0xFF161412);
+  static const onSurfaceDark = Color(0xFFF5F2EE);
+  static const surfaceContainerLowestDark = Color(0xFF2A2826);
+  static const surfaceContainerLowDark = Color(0xFF1F1D1B);
+  static const surfaceContainerDark = Color(0xFF2A2826);
+  static const surfaceContainerHighDark = Color(0xFF34322F);
+  static const surfaceContainerHighestDark = Color(0xFF403D39);
+  static const onSurfaceVariantDark = Color(0xFFA39A8E);
+  static const outlineDark = Color(0xFF3F3C38);
+  static const outlineVariantDark = Color(0xFF2A2826);
+
+  // Phase accents — warm-shifted, de-saturated versions of the original
+  // hues. Used both as the 8% tint background source (phasesDark) and as
+  // the foreground text/icon colour (phasesOnDark). Each value clears
+  // 4.5:1 against surfaceContainerLowestDark (#2A2826) and against its own
+  // tinted background.
+  static const phase1Dark = Color(0xFFFFB870); // soft warm orange
+  static const phase2Dark = Color(0xFFFF9866); // warm deep orange
+  static const phase3Dark = Color(0xFFA4DEAC); // warm soft green
+  static const phase4Dark = Color(0xFFB6B3FF); // warm indigo
+  static const phase5Dark = Color(0xFFE1A7E7); // warm purple
+  static const phase6Dark = Color(0xFFFFA0AB); // warm pink
+
+  static const List<Color> phasesDark = [
+    phase1Dark,
+    phase2Dark,
+    phase3Dark,
+    phase4Dark,
+    phase5Dark,
+    phase6Dark,
+  ];
+
+  static const phase1OnDark = phase1Dark;
+  static const phase2OnDark = phase2Dark;
+  static const phase3OnDark = phase3Dark;
+  static const phase4OnDark = phase4Dark;
+  static const phase5OnDark = phase5Dark;
+  static const phase6OnDark = phase6Dark;
+
+  static const List<Color> phasesOnDark = [
+    phase1OnDark,
+    phase2OnDark,
+    phase3OnDark,
+    phase4OnDark,
+    phase5OnDark,
+    phase6OnDark,
+  ];
 }

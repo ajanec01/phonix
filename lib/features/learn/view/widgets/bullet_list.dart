@@ -7,6 +7,9 @@ class BulletList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bulletColor =
+        isDark ? AppColors.onSurfaceVariantDark : AppColors.onSurfaceVariant;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: items
@@ -16,9 +19,9 @@ class BulletList extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('· ',
+                  Text('· ',
                       style: TextStyle(
-                          color: AppColors.onSurfaceVariant,
+                          color: bulletColor,
                           fontWeight: FontWeight.bold)),
                   Expanded(
                     child: Text(item,

@@ -9,9 +9,16 @@ class LearnSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark
+        ? AppColors.surfaceContainerHighDark
+        : AppColors.surfaceContainerHigh;
+    final shimmerHighlight = isDark
+        ? AppColors.surfaceContainerLowDark
+        : AppColors.surfaceContainerLow;
     return Shimmer.fromColors(
-      baseColor: AppColors.surfaceContainerHigh,
-      highlightColor: AppColors.surfaceContainerLow,
+      baseColor: shimmerBase,
+      highlightColor: shimmerHighlight,
       child: LearnScrollView(
         slivers: [
           SliverToBoxAdapter(

@@ -27,13 +27,22 @@ class _AspectScreenState extends State<AspectScreen> {
     final aspect = widget.aspect;
     final color = widget.color;
     final foregroundColor = widget.foregroundColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final scaffoldColor = isDark
+        ? AppColors.surfaceContainerLowDark
+        : AppColors.surfaceContainerLow;
+    final cardColor = isDark
+        ? AppColors.surfaceContainerLowestDark
+        : AppColors.surfaceContainerLowest;
+    final borderColor =
+        isDark ? AppColors.outlineVariantDark : AppColors.outlineVariant;
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLow,
+      backgroundColor: scaffoldColor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar.large(
-            backgroundColor: AppColors.surfaceContainerLow,
+            backgroundColor: scaffoldColor,
             surfaceTintColor: Colors.transparent,
             title: Text(aspect.title),
           ),
@@ -46,9 +55,9 @@ class _AspectScreenState extends State<AspectScreen> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerLowest,
+                      color: cardColor,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.outlineVariant),
+                      border: Border.all(color: borderColor),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,13 +136,21 @@ class _ActivityPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = isDark
+        ? AppColors.surfaceContainerLowestDark
+        : AppColors.surfaceContainerLowest;
+    final borderColor =
+        isDark ? AppColors.outlineVariantDark : AppColors.outlineVariant;
+    final secondaryTextColor =
+        isDark ? AppColors.onSurfaceVariantDark : AppColors.onSurfaceVariant;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: borderColor),
       ),
       child: Column(
         children: [
@@ -143,7 +160,7 @@ class _ActivityPlaceholder extends StatelessWidget {
             _descriptions[aspect.number] ?? aspect.description,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.onSurfaceVariant,
+                  color: secondaryTextColor,
                 ),
           ),
           const SizedBox(height: 24),

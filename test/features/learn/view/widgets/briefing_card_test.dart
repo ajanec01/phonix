@@ -24,7 +24,9 @@ Phase _phase({
       tipsForHome: tipsForHome,
     );
 
-Widget _wrap(Widget child) => MaterialApp(
+Widget _wrap(Widget child, {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16),
@@ -408,6 +410,64 @@ void main() {
                   'phase $id TipsSection should receive phaseNOnLight as its color');
         }
       });
+    });
+
+    group('Brightness.dark — phase surface and foreground tokens', () {
+      // In dark mode the card background source switches to phasesDark and
+      // foreground (icon, heading, chevron, divider, TipsSection) switches
+      // to phasesOnDark.
+      for (final id in [1, 2, 3, 4, 5, 6]) {
+        testWidgets(
+            'phase $id: background uses phasesDark[$id-1] at 8% and foreground uses phasesOnDark[$id-1]',
+            (tester) async {
+          await tester.pumpWidget(
+            _wrap(
+              BriefingCard(
+                phase: _phase(id: id, title: 'Phase $id'),
+                expanded: true,
+                onToggle: () {},
+              ),
+              brightness: Brightness.dark,
+            ),
+          );
+
+          final expectedSurface = AppColors.phasesDark[id - 1];
+          final expectedFg = AppColors.phasesOnDark[id - 1];
+
+          // Card background uses phasesDark[id-1] at 8%
+          final outer = tester.widget<Container>(
+            find
+                .descendant(
+                  of: find.byType(BriefingCard),
+                  matching: find.byType(Container),
+                )
+                .first,
+          );
+          final decoration = outer.decoration as BoxDecoration;
+          expect(decoration.color, expectedSurface.withValues(alpha: 0.08),
+              reason: 'phase $id dark surface must use phasesDark[$id-1]@8%');
+
+          // Info-circle icon uses phasesOnDark
+          final infoIcon = tester.widget<Icon>(
+            find.descendant(
+              of: find.byType(BriefingCard),
+              matching: find.byIcon(CupertinoIcons.info_circle_fill),
+            ),
+          );
+          expect(infoIcon.color, expectedFg,
+              reason: 'phase $id dark info icon must use phasesOnDark');
+
+          // Heading text uses phasesOnDark
+          final heading = tester.widget<Text>(find.text('About Phase $id'));
+          expect(heading.style?.color, expectedFg,
+              reason: 'phase $id dark heading must use phasesOnDark');
+
+          // TipsSection receives phasesOnDark
+          final tips = tester.widget<TipsSection>(find.byType(TipsSection));
+          expect(tips.color, expectedFg,
+              reason: 'phase $id dark TipsSection must use phasesOnDark');
+        });
+      }
     });
   });
 }
