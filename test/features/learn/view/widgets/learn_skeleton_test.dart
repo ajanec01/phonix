@@ -5,14 +5,18 @@ import 'package:phonix/features/learn/view/widgets/shimmer_box.dart';
 import 'package:phonix/theme/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
 
-Widget _wrap(Widget child) => MaterialApp(
+Widget _wrap(Widget child, {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       home: Scaffold(body: child),
     );
 
-Future<void> _pumpTallSkeleton(WidgetTester tester) async {
+Future<void> _pumpTallSkeleton(WidgetTester tester,
+    {Brightness brightness = Brightness.light}) async {
   await tester.binding.setSurfaceSize(const Size(800, 2400));
   addTearDown(() => tester.binding.setSurfaceSize(null));
-  await tester.pumpWidget(_wrap(const LearnSkeleton()));
+  await tester.pumpWidget(
+      _wrap(const LearnSkeleton(), brightness: brightness));
 }
 
 void main() {
@@ -49,6 +53,16 @@ void main() {
       await _pumpTallSkeleton(tester);
 
       expect(find.byType(ShimmerBox), findsNWidgets(11));
+    });
+
+    testWidgets(
+        'Brightness.dark: Shimmer base/highlight use dark surface tokens',
+        (tester) async {
+      await _pumpTallSkeleton(tester, brightness: Brightness.dark);
+
+      final shimmer = tester.widget<Shimmer>(find.byType(Shimmer));
+      expect(shimmer.gradient.colors.first, AppColors.surfaceContainerHighDark);
+      expect(shimmer.gradient.colors[2], AppColors.surfaceContainerLowDark);
     });
   });
 }

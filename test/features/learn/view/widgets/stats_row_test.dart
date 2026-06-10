@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phonix/features/learn/view/widgets/stats_row.dart';
+import 'package:phonix/theme/app_colors.dart';
 
-Widget _wrap(Widget child) => MaterialApp(
+Widget _wrap(Widget child, {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16),
@@ -65,6 +68,30 @@ void main() {
       await tester.pumpWidget(_wrap(const StatsRow()));
 
       expect(find.text('0'), findsNWidgets(2));
+    });
+
+    testWidgets(
+        'Brightness.dark: chip uses surfaceContainerLowestDark with outlineVariantDark border',
+        (tester) async {
+      await tester.pumpWidget(
+        _wrap(const StatsRow(), brightness: Brightness.dark),
+      );
+
+      final containers = tester
+          .widgetList<Container>(
+            find.descendant(
+              of: find.byType(StatsRow),
+              matching: find.byWidgetPredicate(
+                (w) => w is Container && w.decoration is BoxDecoration,
+              ),
+            ),
+          )
+          .toList();
+      expect(containers, isNotEmpty);
+      final decoration = containers.first.decoration as BoxDecoration;
+      expect(decoration.color, AppColors.surfaceContainerLowestDark);
+      expect((decoration.border as Border).top.color,
+          AppColors.outlineVariantDark);
     });
   });
 }

@@ -18,6 +18,15 @@ class AspectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = isDark
+        ? AppColors.surfaceContainerLowestDark
+        : AppColors.surfaceContainerLowest;
+    final borderColor =
+        isDark ? AppColors.outlineVariantDark : AppColors.outlineVariant;
+    final chevronColor =
+        isDark ? AppColors.onSurfaceVariantDark : AppColors.onSurfaceVariant;
+
     void navigate() => Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (_) => AspectScreen(
@@ -37,9 +46,9 @@ class AspectCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerLowest,
+            color: cardColor,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.outlineVariant),
+            border: Border.all(color: borderColor),
           ),
           child: Row(
             children: [
@@ -83,8 +92,8 @@ class AspectCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              const Icon(CupertinoIcons.chevron_right,
-                  size: 14, color: AppColors.onSurfaceVariant),
+              Icon(CupertinoIcons.chevron_right,
+                  size: 14, color: chevronColor),
             ],
           ),
         ),

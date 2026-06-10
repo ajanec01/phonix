@@ -25,9 +25,12 @@ class _PhaseScreenState extends State<PhaseScreen> {
   bool _briefingExpanded = true;
   late final AspectViewModel _viewModel;
 
-  Color get _phaseColor => AppColors.phases[widget.phase.id - 1];
-  Color get _phaseForegroundColor =>
-      AppColors.phasesOnLight[widget.phase.id - 1];
+  Color _phaseColor(bool isDark) => isDark
+      ? AppColors.phasesDark[widget.phase.id - 1]
+      : AppColors.phases[widget.phase.id - 1];
+  Color _phaseForegroundColor(bool isDark) => isDark
+      ? AppColors.phasesOnDark[widget.phase.id - 1]
+      : AppColors.phasesOnLight[widget.phase.id - 1];
 
   @override
   void initState() {
@@ -52,13 +55,17 @@ class _PhaseScreenState extends State<PhaseScreen> {
   @override
   Widget build(BuildContext context) {
     final phase = widget.phase;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final scaffoldColor = isDark
+        ? AppColors.surfaceContainerLowDark
+        : AppColors.surfaceContainerLow;
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLow,
+      backgroundColor: scaffoldColor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar.large(
-            backgroundColor: AppColors.surfaceContainerLow,
+            backgroundColor: scaffoldColor,
             surfaceTintColor: Colors.transparent,
             title: Text(phase.title),
           ),
@@ -77,8 +84,8 @@ class _PhaseScreenState extends State<PhaseScreen> {
             child: ListenableBuilder(
               listenable: _viewModel,
               builder: (context, _) {
-                final color = _phaseColor;
-                final foregroundColor = _phaseForegroundColor;
+                final color = _phaseColor(isDark);
+                final foregroundColor = _phaseForegroundColor(isDark);
                 return switch (_viewModel.state) {
                   AspectStateLoading() => _AspectsLoading(),
                   AspectStateLoaded(:final aspects) when aspects.isEmpty =>
@@ -104,6 +111,13 @@ class _AspectsLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shimmerBase = isDark
+        ? AppColors.surfaceContainerHighDark
+        : AppColors.surfaceContainerHigh;
+    final shimmerHighlight = isDark
+        ? AppColors.surfaceContainerLowDark
+        : AppColors.surfaceContainerLow;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
       child: Column(
@@ -112,8 +126,8 @@ class _AspectsLoading extends StatelessWidget {
           Text('Activities', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),
           Shimmer.fromColors(
-            baseColor: AppColors.surfaceContainerHigh,
-            highlightColor: AppColors.surfaceContainerLow,
+            baseColor: shimmerBase,
+            highlightColor: shimmerHighlight,
             child: Column(
               children: List.generate(
                 4,

@@ -10,6 +10,9 @@ class ContinueCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backdropColor =
+        isDark ? AppColors.surfaceContainerHighestDark : AppColors.secondary;
     void navigate() => Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (_) => PhaseScreen(phase: phase),
@@ -26,7 +29,7 @@ class ContinueCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppColors.secondary,
+            color: backdropColor,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(

@@ -18,7 +18,11 @@ class ParentGuideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const color = AppColors.secondary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = isDark ? AppColors.onSurfaceDark : AppColors.secondary;
+    final backgroundColor = isDark
+        ? AppColors.surfaceContainerHighDark
+        : AppColors.secondaryContainer;
 
     return AnimatedSize(
       duration: const Duration(milliseconds: 200),
@@ -26,7 +30,7 @@ class ParentGuideCard extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.secondaryContainer,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(

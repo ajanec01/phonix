@@ -9,8 +9,10 @@ import 'package:phonix/features/learn/domain/model/phase.dart';
 import 'package:phonix/features/learn/view/screens/phase_screen.dart';
 import 'package:phonix/features/learn/view/widgets/aspect_card.dart';
 import 'package:phonix/features/learn/view/widgets/bullet_list.dart';
+import 'package:phonix/features/learn/view/widgets/briefing_card.dart';
 import 'package:phonix/features/learn/viewmodel/aspect_state.dart';
 import 'package:phonix/features/learn/viewmodel/aspect_viewmodel.dart';
+import 'package:phonix/theme/app_colors.dart';
 
 // ---------------------------------------------------------------------------
 // Fake repository (no-op; never called — load() is overridden)
@@ -69,7 +71,10 @@ Aspect _aspect(int n) => Aspect(
       parentGuide: 'guide',
     );
 
-Widget _wrap(AspectViewModel vm) => MaterialApp(
+Widget _wrap(AspectViewModel vm,
+        {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       home: PhaseScreen(phase: _testPhase, viewModel: vm),
     );
 
@@ -126,6 +131,53 @@ void main() {
 
       // Briefing content is now hidden (expanded = false).
       expect(find.text(_testPhase.about), findsNothing);
+    });
+
+    testWidgets(
+        'Brightness.dark: scaffold uses surfaceContainerLowDark and BriefingCard uses dark phase tokens',
+        (tester) async {
+      final vm = _FakeAspectViewModel(AspectStateLoaded(aspects: const []));
+      await tester.pumpWidget(_wrap(vm, brightness: Brightness.dark));
+
+      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
+      expect(scaffold.backgroundColor, AppColors.surfaceContainerLowDark);
+
+      // BriefingCard outer container background uses phasesDark[0]@8% in dark.
+      final outer = tester.widget<Container>(
+        find
+            .descendant(
+              of: find.byType(BriefingCard),
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+      final decoration = outer.decoration as BoxDecoration;
+      expect(decoration.color,
+          AppColors.phasesDark[0].withValues(alpha: 0.08));
+    });
+
+    testWidgets(
+        'Brightness.dark: loading state uses dark shimmer tokens',
+        (tester) async {
+      final vm = _FakeAspectViewModel(AspectStateLoading());
+      await tester.pumpWidget(_wrap(vm, brightness: Brightness.dark));
+
+      final shimmer = tester.widget<Shimmer>(find.byType(Shimmer).first);
+      expect(shimmer.gradient.colors.first, AppColors.surfaceContainerHighDark);
+      expect(shimmer.gradient.colors[2], AppColors.surfaceContainerLowDark);
+    });
+
+    testWidgets(
+        'Brightness.dark: AspectCard receives phasesDark and phasesOnDark tokens for the phase',
+        (tester) async {
+      final aspects = [_aspect(1)];
+      final vm = _FakeAspectViewModel(AspectStateLoaded(aspects: aspects));
+      await tester.pumpWidget(_wrap(vm, brightness: Brightness.dark));
+      await tester.pump();
+
+      final card = tester.widget<AspectCard>(find.byType(AspectCard));
+      expect(card.color, AppColors.phasesDark[0]);
+      expect(card.foregroundColor, AppColors.phasesOnDark[0]);
     });
 
     testWidgets('tips section expands when tapped and shows bullet list', (tester) async {

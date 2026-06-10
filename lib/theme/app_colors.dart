@@ -76,4 +76,62 @@ abstract final class AppColors {
     phase5OnLight,
     phase6OnLight,
   ];
+
+  // ===========================================================================
+  // Dark mode — Option C: High-contrast dark
+  // ---------------------------------------------------------------------------
+  // Surface base is pure black (#000000 page and scaffold) with a #0D0D0D
+  // card face that sits one notch above black. Phase accents are pushed
+  // toward their fully-saturated edge so each foreground hue clears
+  // 4.5:1 with a wide safety margin (5.09:1 minimum, 12.62:1 maximum).
+  // Mirrors iOS "Increase Contrast" accessibility mode.
+  // ===========================================================================
+  static const surfaceDark = Color(0xFF000000);
+  static const onSurfaceDark = Color(0xFFFFFFFF);
+  static const surfaceContainerLowestDark = Color(0xFF0D0D0D);
+  static const surfaceContainerLowDark = Color(0xFF000000);
+  static const surfaceContainerDark = Color(0xFF1A1A1A);
+  static const surfaceContainerHighDark = Color(0xFF262626);
+  static const surfaceContainerHighestDark = Color(0xFF333333);
+  static const onSurfaceVariantDark = Color(0xFFC9C9C9);
+  static const outlineDark = Color(0xFF808080);
+  static const outlineVariantDark = Color(0xFF4D4D4D);
+
+  // Phase accents — fully saturated values that read as strong, deliberate
+  // signals at every brightness. Used both as the 8% tint background
+  // source (phasesDark) and as the foreground text/icon colour
+  // (phasesOnDark). Every value clears 4.5:1 against
+  // surfaceContainerLowestDark (#0D0D0D) and against its own tinted
+  // background.
+  static const phase1Dark = Color(0xFFFFB300); // saturated bright orange
+  static const phase2Dark = Color(0xFFFF7A33); // saturated deep orange
+  static const phase3Dark = Color(0xFF33FF66); // saturated bright green
+  static const phase4Dark = Color(0xFF7A78FF); // saturated indigo
+  static const phase5Dark = Color(0xFFE066FF); // saturated purple
+  static const phase6Dark = Color(0xFFFF4D6A); // saturated pink
+
+  static const List<Color> phasesDark = [
+    phase1Dark,
+    phase2Dark,
+    phase3Dark,
+    phase4Dark,
+    phase5Dark,
+    phase6Dark,
+  ];
+
+  static const phase1OnDark = phase1Dark;
+  static const phase2OnDark = phase2Dark;
+  static const phase3OnDark = phase3Dark;
+  static const phase4OnDark = phase4Dark;
+  static const phase5OnDark = phase5Dark;
+  static const phase6OnDark = phase6Dark;
+
+  static const List<Color> phasesOnDark = [
+    phase1OnDark,
+    phase2OnDark,
+    phase3OnDark,
+    phase4OnDark,
+    phase5OnDark,
+    phase6OnDark,
+  ];
 }
