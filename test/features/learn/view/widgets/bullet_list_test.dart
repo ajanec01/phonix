@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:phonix/features/learn/view/widgets/bullet_list.dart';
 import 'package:phonix/theme/app_colors.dart';
 
-Widget _wrap(Widget child) => MaterialApp(
+Widget _wrap(Widget child, {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16),
@@ -67,6 +69,18 @@ void main() {
 
       final bullet = tester.widget<Text>(find.text('· '));
       expect(bullet.style?.color, AppColors.onSurfaceVariant);
+    });
+
+    testWidgets(
+        'Brightness.dark: bullet uses AppColors.onSurfaceVariantDark',
+        (tester) async {
+      await tester.pumpWidget(
+        _wrap(const BulletList(items: ['only']),
+            brightness: Brightness.dark),
+      );
+
+      final bullet = tester.widget<Text>(find.text('· '));
+      expect(bullet.style?.color, AppColors.onSurfaceVariantDark);
     });
   });
 }

@@ -11,14 +11,26 @@ class PhaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = isDark
+        ? AppColors.surfaceContainerLowestDark
+        : AppColors.surfaceContainerLowest;
+    final borderColor =
+        isDark ? AppColors.outlineVariantDark : AppColors.outlineVariant;
+    final stripeColor = isDark
+        ? AppColors.phasesOnDark[phase.id - 1]
+        : AppColors.phasesOnLight[phase.id - 1];
+    final chevronColor =
+        isDark ? AppColors.onSurfaceVariantDark : AppColors.onSurfaceVariant;
+
     return SemanticButton(
       onPressed: () => _navigateToPhase(context, phase),
       borderRadius: BorderRadius.circular(14),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: cardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.outlineVariant),
+          border: Border.all(color: borderColor),
         ),
         clipBehavior: Clip.hardEdge,
         child: IntrinsicHeight(
@@ -26,7 +38,7 @@ class PhaseCard extends StatelessWidget {
             children: [
               Container(
                 width: 4,
-                color: AppColors.phasesOnLight[phase.id - 1],
+                color: stripeColor,
               ),
               Expanded(
                 child: Padding(
@@ -50,10 +62,10 @@ class PhaseCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Icon(
+                      Icon(
                         CupertinoIcons.chevron_right,
                         size: 16,
-                        color: AppColors.onSurfaceVariant,
+                        color: chevronColor,
                       ),
                     ],
                   ),

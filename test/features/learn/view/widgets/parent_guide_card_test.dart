@@ -6,7 +6,9 @@ import 'package:phonix/core/widgets/semantic_button.dart';
 import 'package:phonix/features/learn/view/widgets/parent_guide_card.dart';
 import 'package:phonix/theme/app_colors.dart';
 
-Widget _wrap(Widget child) => MaterialApp(
+Widget _wrap(Widget child, {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16),
@@ -290,6 +292,35 @@ void main() {
       );
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.color, AppColors.secondaryContainer);
+    });
+
+    testWidgets(
+        'Brightness.dark: background and header colour use dark surface tokens',
+        (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          ParentGuideCard(
+            guide: 'guide',
+            expanded: true,
+            onToggle: () {},
+          ),
+          brightness: Brightness.dark,
+        ),
+      );
+
+      final container = tester.widget<Container>(
+        find
+            .descendant(
+              of: find.byType(ParentGuideCard),
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+      final decoration = container.decoration as BoxDecoration;
+      expect(decoration.color, AppColors.surfaceContainerHighDark);
+
+      final header = tester.widget<Text>(find.text('For Parents'));
+      expect(header.style?.color, AppColors.onSurfaceDark);
     });
   });
 }

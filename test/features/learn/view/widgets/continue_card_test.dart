@@ -24,7 +24,11 @@ Phase _phase({int id = 1}) => Phase(
       tipsForHome: const [],
     );
 
-Widget _wrap(Widget child, {NavigatorObserver? observer}) => MaterialApp(
+Widget _wrap(Widget child,
+        {NavigatorObserver? observer,
+        Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       navigatorObservers: observer == null ? const [] : [observer],
       home: Scaffold(
         body: Padding(
@@ -89,6 +93,31 @@ void main() {
       );
 
       handle.dispose();
+    });
+
+    testWidgets(
+        'Brightness.dark: outer container background uses surfaceContainerHighestDark',
+        (tester) async {
+      await tester.pumpWidget(
+        _wrap(ContinueCard(phase: _phase()), brightness: Brightness.dark),
+      );
+
+      final container = tester.widget<Container>(
+        find.descendant(
+          of: find.byType(ContinueCard),
+          matching: find.byWidgetPredicate(
+            (w) =>
+                w is Container &&
+                w.decoration is BoxDecoration &&
+                (w.decoration as BoxDecoration).color ==
+                    AppColors.surfaceContainerHighestDark,
+          ),
+        ),
+      );
+      expect(
+        (container.decoration as BoxDecoration).color,
+        equals(AppColors.surfaceContainerHighestDark),
+      );
     });
 
     testWidgets('tapping pushes a CupertinoPageRoute to PhaseScreen',

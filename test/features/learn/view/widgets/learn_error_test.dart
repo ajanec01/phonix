@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:phonix/features/learn/view/widgets/learn_error.dart';
 import 'package:phonix/theme/app_colors.dart';
 
-Widget _wrap(Widget child) => MaterialApp(
+Widget _wrap(Widget child, {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       home: Scaffold(body: child),
     );
 
@@ -25,6 +27,18 @@ void main() {
 
       final text = tester.widget<Text>(find.text('Anything'));
       expect(text.style?.color, AppColors.onSurfaceVariant);
+    });
+
+    testWidgets(
+        'Brightness.dark: message text color is AppColors.onSurfaceVariantDark',
+        (tester) async {
+      await tester.pumpWidget(
+        _wrap(const LearnError(message: 'Dark error'),
+            brightness: Brightness.dark),
+      );
+
+      final text = tester.widget<Text>(find.text('Dark error'));
+      expect(text.style?.color, AppColors.onSurfaceVariantDark);
     });
 
     testWidgets('renders the correct text for different messages',

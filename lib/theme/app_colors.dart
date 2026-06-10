@@ -76,4 +76,59 @@ abstract final class AppColors {
     phase5OnLight,
     phase6OnLight,
   ];
+
+  // ===========================================================================
+  // Dark mode — Option A: Apple system dark
+  // ---------------------------------------------------------------------------
+  // Surface base mirrors Apple HIG dark: #000000 page background with an
+  // elevated #1C1C1E scaffold and #2C2C2E card face. Phase accents are the
+  // Apple system dark palette, brightened where the unmodified system value
+  // sat below 4.5:1 on the card face (notably indigo and pink).
+  // ===========================================================================
+  static const surfaceDark = Color(0xFF000000);
+  static const onSurfaceDark = Color(0xFFFFFFFF);
+  static const surfaceContainerLowestDark = Color(0xFF2C2C2E);
+  static const surfaceContainerLowDark = Color(0xFF1C1C1E);
+  static const surfaceContainerDark = Color(0xFF2C2C2E);
+  static const surfaceContainerHighDark = Color(0xFF3A3A3C);
+  static const surfaceContainerHighestDark = Color(0xFF48484A);
+  static const onSurfaceVariantDark = Color(0xFF8E8E93);
+  static const outlineDark = Color(0xFF38383A);
+  static const outlineVariantDark = Color(0xFF2C2C2E);
+
+  // Phase accents — used both as the 8% tint background source (phasesDark)
+  // and as the foreground text/icon colour (phasesOnDark). Each value clears
+  // 4.5:1 against surfaceContainerLowestDark (#2C2C2E) and against its own
+  // tinted background.
+  static const phase1Dark = Color(0xFFFFB340); // brightened Apple orange
+  static const phase2Dark = Color(0xFFFF8E55); // brightened deep orange
+  static const phase3Dark = Color(0xFF5DDB7C); // brightened Apple green
+  static const phase4Dark = Color(0xFF9694FF); // brightened Apple indigo
+  static const phase5Dark = Color(0xFFD087F2); // brightened Apple purple
+  static const phase6Dark = Color(0xFFFF7A91); // brightened Apple pink
+
+  static const List<Color> phasesDark = [
+    phase1Dark,
+    phase2Dark,
+    phase3Dark,
+    phase4Dark,
+    phase5Dark,
+    phase6Dark,
+  ];
+
+  static const phase1OnDark = phase1Dark;
+  static const phase2OnDark = phase2Dark;
+  static const phase3OnDark = phase3Dark;
+  static const phase4OnDark = phase4Dark;
+  static const phase5OnDark = phase5Dark;
+  static const phase6OnDark = phase6Dark;
+
+  static const List<Color> phasesOnDark = [
+    phase1OnDark,
+    phase2OnDark,
+    phase3OnDark,
+    phase4OnDark,
+    phase5OnDark,
+    phase6OnDark,
+  ];
 }
