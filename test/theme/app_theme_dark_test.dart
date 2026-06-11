@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:phonix/theme/app_colors.dart';
 import 'package:phonix/theme/app_theme.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  GoogleFonts.config.allowRuntimeFetching = false;
+
   group('AppTheme.dark', () {
     test('exposes a dark ThemeData with Brightness.dark', () {
       final theme = AppTheme.dark;

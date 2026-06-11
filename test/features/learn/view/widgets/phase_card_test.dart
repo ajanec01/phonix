@@ -113,14 +113,15 @@ void main() {
           _wrap(PhaseCard(phase: _phase(1)), brightness: Brightness.dark),
         );
         final container = tester.widget<Container>(
-          find
-              .descendant(
-                of: find.byType(PhaseCard),
-                matching: find.byWidgetPredicate(
-                  (w) => w is Container && w.decoration is BoxDecoration,
-                ),
-              )
-              .first,
+          find.descendant(
+            of: find.byType(PhaseCard),
+            matching: find.byWidgetPredicate(
+              (w) =>
+                  w is Container &&
+                  w.decoration is BoxDecoration &&
+                  (w.decoration as BoxDecoration).color != null,
+            ),
+          ),
         );
         final decoration = container.decoration as BoxDecoration;
         expect(decoration.color, AppColors.surfaceContainerLowestDark);
