@@ -21,8 +21,13 @@ class BriefingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surfaceColor = AppColors.phases[phase.id - 1];
-    final foregroundColor = AppColors.phasesOnLight[phase.id - 1];
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark
+        ? AppColors.phasesDark[phase.id - 1]
+        : AppColors.phases[phase.id - 1];
+    final foregroundColor = isDark
+        ? AppColors.phasesOnDark[phase.id - 1]
+        : AppColors.phasesOnLight[phase.id - 1];
     final headerRadius = BorderRadius.circular(14);
 
     return AnimatedSize(

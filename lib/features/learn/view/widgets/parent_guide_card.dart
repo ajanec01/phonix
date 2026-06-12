@@ -18,7 +18,11 @@ class ParentGuideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const color = AppColors.secondary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = isDark ? AppColors.onSurfaceDark : AppColors.secondary;
+    final backgroundColor = isDark
+        ? AppColors.surfaceContainerHighDark
+        : AppColors.secondaryContainer;
 
     return AnimatedSize(
       duration: const Duration(milliseconds: 200),
@@ -26,7 +30,7 @@ class ParentGuideCard extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.secondaryContainer,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
@@ -43,16 +47,14 @@ class ParentGuideCard extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
                 child: Row(
                   children: [
-                    const Icon(CupertinoIcons.person_fill,
-                        size: 16, color: color),
+                    Icon(CupertinoIcons.person_fill, size: 16, color: color),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'For Parents',
-                        style:
-                            Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  color: color,
-                                ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleSmall?.copyWith(color: color),
                       ),
                     ),
                     Icon(
@@ -72,11 +74,9 @@ class ParentGuideCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Divider(
-                        color: color.withValues(alpha: 0.15), height: 1),
+                    Divider(color: color.withValues(alpha: 0.15), height: 1),
                     const SizedBox(height: 14),
-                    Text(guide,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                    Text(guide, style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
               ),

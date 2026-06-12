@@ -21,7 +21,11 @@ Aspect _aspect({
       parentGuide: 'guide',
     );
 
-Widget _wrap(Widget child) => MaterialApp(home: child);
+Widget _wrap(Widget child, {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
+      home: child,
+    );
 
 void main() {
   group('AspectScreen', () {
@@ -149,6 +153,39 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('guide'), findsNothing);
+    });
+
+    testWidgets(
+        'Brightness.dark: scaffold and cards use dark surface tokens',
+        (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          AspectScreen(
+            aspect: _aspect(),
+            color: AppColors.phasesDark[0],
+            foregroundColor: AppColors.phasesOnDark[0],
+          ),
+          brightness: Brightness.dark,
+        ),
+      );
+
+      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
+      expect(scaffold.backgroundColor, AppColors.surfaceContainerLowDark);
+
+      // Header card uses surfaceContainerLowestDark.
+      final headerCard = tester.widget<Container>(
+        find
+            .byWidgetPredicate(
+              (w) =>
+                  w is Container &&
+                  w.decoration is BoxDecoration &&
+                  (w.decoration as BoxDecoration).color ==
+                      AppColors.surfaceContainerLowestDark,
+            )
+            .first,
+      );
+      expect((headerCard.decoration as BoxDecoration).color,
+          AppColors.surfaceContainerLowestDark);
     });
 
     testWidgets('renders Cupertino ear icon for iconKey "ear"',

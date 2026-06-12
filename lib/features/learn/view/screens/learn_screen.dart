@@ -46,8 +46,12 @@ class _LearnScreenState extends State<LearnScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final scaffoldColor = isDark
+        ? AppColors.surfaceContainerLowDark
+        : AppColors.surfaceContainerLow;
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLow,
+      backgroundColor: scaffoldColor,
       body: ListenableBuilder(
         listenable: _viewModel,
         builder: (context, _) {

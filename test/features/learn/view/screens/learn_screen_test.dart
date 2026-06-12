@@ -14,6 +14,7 @@ import 'package:phonix/features/learn/view/widgets/learn_error.dart';
 import 'package:phonix/features/learn/view/widgets/learn_skeleton.dart';
 import 'package:phonix/features/learn/viewmodel/learn_state.dart';
 import 'package:phonix/features/learn/viewmodel/learn_viewmodel.dart';
+import 'package:phonix/theme/app_colors.dart';
 
 // ---------------------------------------------------------------------------
 // Fake repositories (no-op; never called — load() is overridden)
@@ -70,7 +71,10 @@ Phase _phase(int id) => Phase(
       tipsForHome: const [],
     );
 
-Widget _wrap(LearnViewModel vm) => MaterialApp(
+Widget _wrap(LearnViewModel vm,
+        {Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       home: LearnScreen(viewModel: vm),
     );
 
@@ -103,6 +107,16 @@ void main() {
       expect(widget.currentPhase, currentPhase);
       expect(find.byType(LearnSkeleton), findsNothing);
       expect(find.byType(LearnError), findsNothing);
+    });
+
+    testWidgets(
+        'Brightness.dark: scaffold uses surfaceContainerLowDark',
+        (tester) async {
+      final vm = _FakeLearnViewModel(LearnStateLoading());
+      await tester.pumpWidget(_wrap(vm, brightness: Brightness.dark));
+
+      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
+      expect(scaffold.backgroundColor, AppColors.surfaceContainerLowDark);
     });
 
     testWidgets('LearnStateError shows LearnError with message', (tester) async {

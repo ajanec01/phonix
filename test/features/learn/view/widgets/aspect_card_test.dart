@@ -30,7 +30,11 @@ Aspect _aspect({
       parentGuide: 'guide',
     );
 
-Widget _wrap(Widget child, {NavigatorObserver? observer}) => MaterialApp(
+Widget _wrap(Widget child,
+        {NavigatorObserver? observer,
+        Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       navigatorObservers: observer == null ? const [] : [observer],
       home: Scaffold(
         body: Padding(
@@ -186,6 +190,44 @@ void main() {
       expect(screen.aspect, same(aspect));
       expect(screen.color, equals(color));
       expect(screen.foregroundColor, equals(fg));
+    });
+
+    testWidgets(
+        'Brightness.dark: card uses surfaceContainerLowestDark and outlineVariantDark border',
+        (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          AspectCard(
+            aspect: _aspect(),
+            color: AppColors.phase1,
+            foregroundColor: AppColors.phase1OnLight,
+          ),
+          brightness: Brightness.dark,
+        ),
+      );
+
+      final outerContainer = tester.widget<Container>(
+        find
+            .descendant(
+              of: find.byType(AspectCard),
+              matching: find.byWidgetPredicate(
+                (w) => w is Container && w.padding == const EdgeInsets.all(16),
+              ),
+            )
+            .first,
+      );
+      final decoration = outerContainer.decoration as BoxDecoration;
+      expect(decoration.color, AppColors.surfaceContainerLowestDark);
+      expect((decoration.border as Border).top.color,
+          AppColors.outlineVariantDark);
+
+      final chevron = tester.widget<Icon>(
+        find.descendant(
+          of: find.byType(AspectCard),
+          matching: find.byIcon(CupertinoIcons.chevron_right),
+        ),
+      );
+      expect(chevron.color, AppColors.onSurfaceVariantDark);
     });
 
     testWidgets(

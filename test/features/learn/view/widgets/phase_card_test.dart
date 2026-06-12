@@ -24,7 +24,11 @@ Phase _phase(int id) => Phase(
       tipsForHome: const [],
     );
 
-Widget _wrap(Widget child, {NavigatorObserver? observer}) => MaterialApp(
+Widget _wrap(Widget child,
+        {NavigatorObserver? observer,
+        Brightness brightness = Brightness.light}) =>
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
       navigatorObservers: observer == null ? const [] : [observer],
       home: Scaffold(
         body: Padding(
@@ -85,6 +89,44 @@ void main() {
           );
         });
       }
+    });
+
+    group('Brightness.dark — phase surface and foreground tokens', () {
+      for (final id in [1, 2, 3, 4, 5, 6]) {
+        testWidgets('phase $id stripe uses phasesOnDark[$id-1]',
+            (tester) async {
+          await tester.pumpWidget(
+            _wrap(PhaseCard(phase: _phase(id)),
+                brightness: Brightness.dark),
+          );
+          expect(
+            _stripeContainer(tester).color,
+            equals(AppColors.phasesOnDark[id - 1]),
+            reason:
+                'phase $id stripe must use phasesOnDark[$id-1] in Brightness.dark',
+          );
+        });
+      }
+
+      testWidgets('card face uses surfaceContainerLowestDark', (tester) async {
+        await tester.pumpWidget(
+          _wrap(PhaseCard(phase: _phase(1)), brightness: Brightness.dark),
+        );
+        final container = tester.widget<Container>(
+          find.descendant(
+            of: find.byType(PhaseCard),
+            matching: find.byWidgetPredicate(
+              (w) =>
+                  w is Container &&
+                  w.decoration is BoxDecoration &&
+                  (w.decoration as BoxDecoration).color != null,
+            ),
+          ),
+        );
+        final decoration = container.decoration as BoxDecoration;
+        expect(decoration.color, AppColors.surfaceContainerLowestDark);
+        expect(decoration.border, isA<Border>());
+      });
     });
   });
 }

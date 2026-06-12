@@ -8,6 +8,9 @@ class LearnError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor =
+        isDark ? AppColors.onSurfaceVariantDark : AppColors.onSurfaceVariant;
     return LearnScrollView(
       slivers: [
         SliverFillRemaining(
@@ -18,7 +21,7 @@ class LearnError extends StatelessWidget {
                 message,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.onSurfaceVariant,
+                      color: textColor,
                     ),
               ),
             ),
