@@ -11,8 +11,12 @@ class ContinueCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    // In dark mode the card sat on `surfaceContainerHighestDark` (#48484A),
+    // which dragged the 60%-alpha label contrast to ~4.47:1 — under WCAG AA.
+    // `surfaceContainerDark` (#2C2C2E) restores ~5.88:1 against onSecondary@60%
+    // and matches the elevation used by other dark-mode cards.
     final backdropColor =
-        isDark ? AppColors.surfaceContainerHighestDark : AppColors.secondary;
+        isDark ? AppColors.surfaceContainerDark : AppColors.secondary;
     void navigate() => Navigator.of(context).push(
           CupertinoPageRoute(
             builder: (_) => PhaseScreen(phase: phase),
@@ -41,21 +45,21 @@ class ContinueCard extends StatelessWidget {
                     Text(
                       'Continue',
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.6),
+                            color: AppColors.onSecondary.withValues(alpha: 0.6),
                           ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       phase.title,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
+                            color: AppColors.onSecondary,
                           ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       phase.description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.6),
+                            color: AppColors.onSecondary.withValues(alpha: 0.6),
                           ),
                     ),
                   ],
@@ -65,12 +69,12 @@ class ContinueCard extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
+                  color: AppColors.onSecondary.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   CupertinoIcons.arrow_right,
-                  color: Colors.white,
+                  color: AppColors.onSecondary,
                   size: 16,
                 ),
               ),

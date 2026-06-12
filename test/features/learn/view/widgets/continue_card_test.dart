@@ -96,7 +96,7 @@ void main() {
     });
 
     testWidgets(
-        'Brightness.dark: outer container background uses surfaceContainerHighestDark',
+        'Brightness.dark: outer container background uses surfaceContainerDark',
         (tester) async {
       await tester.pumpWidget(
         _wrap(ContinueCard(phase: _phase()), brightness: Brightness.dark),
@@ -110,14 +110,35 @@ void main() {
                 w is Container &&
                 w.decoration is BoxDecoration &&
                 (w.decoration as BoxDecoration).color ==
-                    AppColors.surfaceContainerHighestDark,
+                    AppColors.surfaceContainerDark,
           ),
         ),
       );
       expect(
         (container.decoration as BoxDecoration).color,
-        equals(AppColors.surfaceContainerHighestDark),
+        equals(AppColors.surfaceContainerDark),
       );
+    });
+
+    testWidgets(
+        'foreground text and icon use AppColors.onSecondary (no hardcoded Colors.white)',
+        (tester) async {
+      final phase = _phase(id: 4);
+      await tester.pumpWidget(_wrap(ContinueCard(phase: phase)));
+
+      final eyebrow = tester.widget<Text>(find.text('Continue'));
+      expect(eyebrow.style?.color,
+          equals(AppColors.onSecondary.withValues(alpha: 0.6)));
+
+      final title = tester.widget<Text>(find.text(phase.title));
+      expect(title.style?.color, equals(AppColors.onSecondary));
+
+      final description = tester.widget<Text>(find.text(phase.description));
+      expect(description.style?.color,
+          equals(AppColors.onSecondary.withValues(alpha: 0.6)));
+
+      final icon = tester.widget<Icon>(find.byType(Icon));
+      expect(icon.color, equals(AppColors.onSecondary));
     });
 
     testWidgets('tapping pushes a CupertinoPageRoute to PhaseScreen',
