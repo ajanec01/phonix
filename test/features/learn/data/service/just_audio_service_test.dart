@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mocktail/mocktail.dart';
@@ -9,6 +7,8 @@ import 'package:phonix/features/learn/data/service/just_audio_service.dart';
 class MockAudioPlayer extends Mock implements AudioPlayer {}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late MockAudioPlayer player;
   late JustAudioService service;
 
@@ -22,14 +22,7 @@ void main() {
   });
 
   test('default constructor uses a new AudioPlayer when none is provided', () {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    runZonedGuarded(
-      () {
-        final defaultService = JustAudioService();
-        expect(defaultService, isA<AudioService>());
-      },
-      (_, __) {},
-    );
+    expect(JustAudioService.new, returnsNormally);
   });
 
   group('play', () {
