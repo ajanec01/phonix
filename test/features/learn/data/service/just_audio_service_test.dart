@@ -7,8 +7,6 @@ import 'package:phonix/features/learn/data/service/just_audio_service.dart';
 class MockAudioPlayer extends Mock implements AudioPlayer {}
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   late MockAudioPlayer player;
   late JustAudioService service;
 
@@ -19,10 +17,6 @@ void main() {
 
   test('JustAudioService implements AudioService', () {
     expect(service, isA<AudioService>());
-  });
-
-  test('default constructor uses a new AudioPlayer when none is provided', () {
-    expect(JustAudioService.new, returnsNormally);
   });
 
   group('play', () {

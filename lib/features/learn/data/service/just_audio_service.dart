@@ -3,7 +3,7 @@ import 'package:just_audio/just_audio.dart';
 import 'audio_service.dart';
 
 class JustAudioService implements AudioService {
-  JustAudioService({AudioPlayer? player}) : _player = player ?? AudioPlayer();
+  JustAudioService({required AudioPlayer player}) : _player = player;
 
   final AudioPlayer _player;
 
